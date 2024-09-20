@@ -189,4 +189,18 @@ export async function fetchWithAuth(url, options = {}) {
           throw error;
         }
       }
-    
+      
+      // upload a file to the API
+      export async function uploadFile(fileContent, token) {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/files`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({fileContent})
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to upload file: ${response.status}`);
+        }
+        return response.json();
+      }
