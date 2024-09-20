@@ -1,47 +1,38 @@
 <script>
   import { user } from '$lib/stores';
+  import { uploadFile } from '$lib/api'; // Importer la fonction d'API
   let file;
   let fileName = '';
   let message = '';
   let loading = false;
 
-  async function uploadFile() {
+  async function handleUpload() {
     if (!file) {
       alert('Veuillez sélectionner un fichier');
       return;
     }
 
-    loading = true;  // Démarrer l'animation de chargement
+    loading = true; // Démarrer l'animation de chargement
 
     // Lire le contenu du fichier
     const fileContent = await file.text();
 
-    // Envoyer le fichier au serveur pour conversion
-    const response = await fetch('/convert', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ fileContent })
-    });
-
-    // Arrêter l'animation de chargement
-    // loading = false;  
-
-    // if (response.ok) {
-    //   const data = await response.json();
-    //   message = 'Fichier converti avec succès. Téléchargement en cours...';
+    try {
+      const data = await uploadFile(fileContent, user.token); // Appeler la fonction d'API
+      message = 'Fichier converti avec succès. Téléchargement en cours...';
 
       // Téléchargement automatique du fichier
-    //   const a = document.createElement('a');
-    //   a.href = data.filePath;
-    //   a.download = 'converted.sql';
-    //   document.body.appendChild(a);
-    //   a.click();
-    //   a.remove();
-    // } else {
-    //   message = 'Erreur lors de la conversion';
-    // }
+      const a = document.createElement('a');
+      a.href = data.filePath; // Assure-toi que `filePath` est correct dans la réponse
+      a.download = 'converted.sql';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      message = error.message; // Afficher l'erreur
+    } finally {
+      loading = false; // Arrêter l'animation de chargement
+    }
   }
 
   function triggerFileInput() {
@@ -53,8 +44,8 @@
     fileName = file ? file.name : '';
   }
 </script>
-<!-- {#if $user} -->
-<form on:submit|preventDefault={uploadFile}>
+
+<form on:submit|preventDefault={handleUpload}>
   <input id="file-input" type="file" accept=".sql" style="display:none" on:change={handleFileChange} />
 
   <button type="button" on:click={triggerFileInput} class="file-select-button">
@@ -78,6 +69,8 @@
     <p>{message}</p>
   {/if}
 </form>
+
+
 <!-- {:else}
 <p>Veuillez vous connecter pour accéder à ce service</p>
 {/if} -->
