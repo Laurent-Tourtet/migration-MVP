@@ -25,7 +25,7 @@ BEGIN
     FROM order_items
     WHERE order_id = order_id;
     RETURN total;
-END$$
+END $$
 DELIMITER ;
 
 -- Création d'une vue utilisant la fonction
@@ -42,8 +42,8 @@ BEGIN
     UPDATE orders
     SET amount = calculate_total(NEW.order_id)
     WHERE order_id = NEW.order_id;
-END$$
+END $$
 DELIMITER ;
 ```
 
-Please note that MySQL does not support creating custom ENUM types like PostgreSQL, so you may need to handle the status values differently in MySQL.
+Please note that MySQL does not support ENUM types like PostgreSQL does, so you may need to handle the status values differently in MySQL. Also, the syntax for functions and triggers in MySQL is slightly different from PostgreSQL.

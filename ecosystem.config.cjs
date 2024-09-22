@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'frontend',
+      name: 'sveltekit-app',
       script: 'npm',
       args: 'start',
       env: {

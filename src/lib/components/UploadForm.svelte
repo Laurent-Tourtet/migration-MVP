@@ -1,53 +1,70 @@
 <script>
-  import { user } from '$lib/stores';
-  import { uploadFile } from '$lib/api'; // Importer la fonction d'API
+  // Import correct de la fonction uploadFile depuis api.js
+  import { uploadFile } from '$lib/api';
   let file;
   let fileName = '';
   let message = '';
   let loading = false;
 
-  async function handleUpload() {
+  // Fonction pour téléverser le fichier
+  async function handleUploadFile() {
+   
+    // Vérification si un fichier est sélectionné
     if (!file) {
       alert('Veuillez sélectionner un fichier');
       return;
     }
 
-    loading = true; // Démarrer l'animation de chargement
-
-    // Lire le contenu du fichier
-    const fileContent = await file.text();
+    loading = true;
+    console.log('Téléversement démarré'); // Log pour suivre le démarrage
 
     try {
-      const data = await uploadFile(fileContent, user.token); // Appeler la fonction d'API
-      message = 'Fichier converti avec succès. Téléchargement en cours...';
+      // Création de l'objet FormData pour l'upload
+      const formData = new FormData();
+      formData.append('file', file);
+      console.log('FormData créé avec le fichier:', file); // Log pour vérifier le fichier
 
-      // Téléchargement automatique du fichier
-      const a = document.createElement('a');
-      a.href = data.filePath; // Assure-toi que `filePath` est correct dans la réponse
-      a.download = 'converted.sql';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      // Appel de la fonction upload dans api.js
+      const response = await uploadFile(formData);  // Correction ici avec le bon nom de fonction
+      console.log('Réponse de l\'API Directus:', response); // Log pour suivre la réponse
+
+      // Vérification de la réponse de l'API
+      if (!response.ok) {
+        throw new Error('Échec du téléversement'); // Log en cas d'échec
+      }
+
+      const data = await response.json();
+      console.log('Téléversement réussi, réponse de l\'API:', data); // Log en cas de succès
+
+      message = 'Fichier téléversé avec succès';
     } catch (error) {
-      message = error.message; // Afficher l'erreur
+      console.error('Erreur lors du téléversement:', error); // Log pour capturer les erreurs
+      message = 'Erreur lors du téléversement';
     } finally {
-      loading = false; // Arrêter l'animation de chargement
+      loading = false;
+      console.log('Téléversement terminé'); // Log pour indiquer que le processus est fini
     }
   }
 
+  // Fonction pour déclencher la sélection de fichier
   function triggerFileInput() {
     document.getElementById('file-input').click();
   }
 
+  // Fonction pour gérer le changement de fichier
   function handleFileChange(event) {
     file = event.target.files[0];
     fileName = file ? file.name : '';
+    console.log('Fichier sélectionné:', fileName); // Log pour suivre le fichier sélectionné
   }
 </script>
 
-<form on:submit|preventDefault={handleUpload}>
+<!-- Formulaire de téléversement -->
+<form on:submit|preventDefault={handleUploadFile}>
+  <!-- Input caché pour le fichier -->
   <input id="file-input" type="file" accept=".sql" style="display:none" on:change={handleFileChange} />
 
+  <!-- Bouton pour sélectionner un fichier -->
   <button type="button" on:click={triggerFileInput} class="file-select-button">
     Choisir un fichier à convertir en MySQL
     <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -55,20 +72,26 @@
     </svg>
   </button>
 
+  <!-- Afficher le nom du fichier si un fichier est sélectionné -->
   {#if fileName}
     <div class="file-info"><img id="logo-file" src="sql.png"> {fileName}</div>
   {/if}
 
+  <!-- Bouton de soumission -->
   <button type="submit" class="submit-button" disabled={loading}>Convertir</button>
 
+  <!-- Message de conversion en cours -->
   {#if loading}
     <p>Conversion en cours...</p>
   {/if}
 
+  <!-- Message de succès ou d'erreur -->
   {#if message}
     <p>{message}</p>
   {/if}
 </form>
+
+
 
 
 <!-- {:else}

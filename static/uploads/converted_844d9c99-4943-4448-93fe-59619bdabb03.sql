@@ -2,7 +2,7 @@ Here is the equivalent MySQL version of the provided PostgreSQL queries:
 
 ```sql
 -- Création d'un type personnalisé ENUM
-CREATE TYPE status_enum ENUM ('pending', 'approved', 'rejected');
+CREATE TYPE status_enum ENUM('pending', 'approved', 'rejected');
 
 -- Création d'une table avec des contraintes complexes
 CREATE TABLE orders (
@@ -46,4 +46,4 @@ END$$
 DELIMITER ;
 ```
 
-Please note that MySQL does not support creating custom ENUM types like PostgreSQL, so you may need to handle the status values differently in MySQL.
+Please note that MySQL does not support the `CREATE TYPE` syntax for creating custom ENUM types directly. You may need to handle the status_enum as a regular ENUM in MySQL or use a workaround to achieve similar functionality.

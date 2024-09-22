@@ -17,7 +17,7 @@ CREATE TABLE orders (
 );
 
 -- Création d'une fonction pour calculer les totaux
-DELIMITER $$
+DELIMITER //
 CREATE FUNCTION calculate_total(order_id INT) RETURNS DECIMAL
 BEGIN
     DECLARE total DECIMAL;
@@ -25,7 +25,7 @@ BEGIN
     FROM order_items
     WHERE order_id = order_id;
     RETURN total;
-END$$
+END //
 DELIMITER ;
 
 -- Création d'une vue utilisant la fonction
@@ -34,7 +34,7 @@ SELECT o.order_id, calculate_total(o.order_id) AS total_amount
 FROM orders o;
 
 -- Création d'un déclencheur pour mettre à jour le total dans la table des commandes
-DELIMITER $$
+DELIMITER //
 CREATE TRIGGER after_order_item_insert
 AFTER INSERT ON order_items
 FOR EACH ROW
@@ -42,8 +42,8 @@ BEGIN
     UPDATE orders
     SET amount = calculate_total(NEW.order_id)
     WHERE order_id = NEW.order_id;
-END$$
+END //
 DELIMITER ;
 ```
 
-Please note that MySQL does not support creating custom ENUM types like PostgreSQL, so you may need to handle the status values differently in MySQL.
+Please note that MySQL does not support the `ENUM` data type with predefined values like PostgreSQL. You can use a similar approach by creating a custom type and using it in the table definition. Also, the syntax for functions and triggers may vary slightly between PostgreSQL and MySQL.

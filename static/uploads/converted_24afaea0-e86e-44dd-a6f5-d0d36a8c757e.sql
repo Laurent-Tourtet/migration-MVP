@@ -1,16 +1,14 @@
-Here is the equivalent MySQL version of the provided PostgreSQL queries:
-
 ```sql
 -- Création d'un type personnalisé ENUM
-CREATE TYPE status_enum ENUM ('pending', 'approved', 'rejected');
+CREATE TYPE status_enum AS ENUM ('pending', 'approved', 'rejected');
 
 -- Création d'une table avec des contraintes complexes
 CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status status_enum NOT NULL DEFAULT 'pending',
-    amount DECIMAL(10, 2) CHECK (amount > 0),
+    status ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+    amount DECIMAL(10, 2),
     discount DECIMAL(5, 2) DEFAULT 0,
     CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
     UNIQUE (order_date, customer_id)
@@ -18,9 +16,9 @@ CREATE TABLE orders (
 
 -- Création d'une fonction pour calculer les totaux
 DELIMITER $$
-CREATE FUNCTION calculate_total(order_id INT) RETURNS DECIMAL
+CREATE FUNCTION calculate_total(order_id INT) RETURNS DECIMAL(10, 2)
 BEGIN
-    DECLARE total DECIMAL;
+    DECLARE total DECIMAL(10, 2);
     SELECT SUM(amount) INTO total
     FROM order_items
     WHERE order_id = order_id;
@@ -45,5 +43,3 @@ BEGIN
 END$$
 DELIMITER ;
 ```
-
-Please note that MySQL does not support creating custom ENUM types like PostgreSQL, so you may need to handle the status values differently in MySQL.

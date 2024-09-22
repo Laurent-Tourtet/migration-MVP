@@ -133,13 +133,14 @@ export async function POST({ request }) {
 
     const uniqueFileName = `converted_${uuidv4()}.sql`;
     const uploadDir = path.join('static', 'uploads');
+    
 
     if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true, mode: 0o775 });  // Assurer les bonnes permissions
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
 
     const outputFile = path.join(uploadDir, uniqueFileName);
-    fs.writeFileSync(outputFile, convertedContent, { encoding: 'utf8', mode: 0o664 });  // Assurer les bonnes permissions
+    fs.writeFileSync(outputFile, convertedContent, 'utf8');
 
     return json({ message: 'Fichier converti avec succès', filePath: `/uploads/${uniqueFileName}` });
   } catch (error) {

@@ -1,4 +1,4 @@
-Here is the equivalent MySQL version of the provided PostgreSQL queries:
+Here is the equivalent MySQL version of the given PostgreSQL queries:
 
 ```sql
 -- Création d'un type personnalisé ENUM
@@ -46,4 +46,4 @@ END$$
 DELIMITER ;
 ```
 
-Please note that MySQL does not support creating custom ENUM types like PostgreSQL, so you may need to handle the status values differently in MySQL.
+Please note that MySQL does not support the `CREATE TYPE` syntax for creating custom ENUM types directly. You can use the ENUM data type directly in the table definition as shown above. Also, the syntax for defining functions and triggers in MySQL is slightly different from PostgreSQL.

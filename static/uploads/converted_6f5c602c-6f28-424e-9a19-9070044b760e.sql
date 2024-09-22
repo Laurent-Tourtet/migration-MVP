@@ -46,4 +46,4 @@ END$$
 DELIMITER ;
 ```
 
-Please note that MySQL does not support creating custom ENUM types like PostgreSQL, so you may need to handle the status values differently in MySQL.
+Please note that MySQL does not support the `CREATE TYPE` syntax for creating custom ENUM types. Also, the syntax for creating functions and triggers in MySQL is slightly different from PostgreSQL.

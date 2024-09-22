@@ -190,17 +190,27 @@ export async function fetchWithAuth(url, options = {}) {
         }
       }
       
-      // upload a file to the API
-      export async function uploadFile(fileContent, token) {
-        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/files`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({fileContent})
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to upload file: ${response.status}`);
-        }
-        return response.json();
-      }
+     // upload a file to the API
+export async function uploadFile(formData) {
+    const token = localStorage.getItem('token'); // Récupération du token d'authentification
+console.log('Token utilisé pour le téléversement:', token);
+    if (!token) {
+        throw new Error('No authentication token found');
+    }
+
+    const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/files`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,  // Envoi du token avec la requête
+        },
+        body: formData // Envoi du fichier
+    });
+
+    if (!response.ok) {
+    const errorResponse = await response.json();
+    console.error('Erreur lors du téléversement:', errorResponse);
+    throw new Error(`Échec du téléversement: ${response.status} - ${errorResponse.message}`);
+}
+
+    return await response.json();
+}
