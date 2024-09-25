@@ -131,7 +131,7 @@ export async function POST({ request }) {
       return json({ message: 'Erreur : dialecte non pris en charge ou fichier incorrect.' }, { status: 400 });
     }
 
-    const uniqueFileName = `converted_${uuidv4()}.sql`;
+    const uniqueFileName = `convert_${uuidv4()}.sql`;
     const uploadDir = path.join('static', 'uploads');
     
 

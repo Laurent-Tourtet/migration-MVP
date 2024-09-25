@@ -37,6 +37,8 @@
        };
        const response = await createUser(data);
 
+       console.log('Réponse de l\'API:', response);
+
        if(response && response.data) {
          succesMessage = " inscription réussie!";
          goto('/login');
@@ -44,7 +46,8 @@
          errorMessage = "Erreur lors de l'inscription";
        }
        } catch (error){
-         errorMessage = "Error: " + error.message
+        console.error('Erreur lors de la création de l\'utilisateur:', error);
+    errorMessage = "Erreur: " + (error.response?.data?.message || error.message);
        }
      }
 
