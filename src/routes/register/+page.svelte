@@ -46,8 +46,7 @@
          errorMessage = "Erreur lors de l'inscription";
        }
        } catch (error){
-        console.error('Erreur lors de la création de l\'utilisateur:', error);
-    errorMessage = "Erreur: " + (error.response?.data?.message || error.message);
+         errorMessage = "Error: " + error.message
        }
      }
 

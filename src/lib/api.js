@@ -110,6 +110,7 @@ export async function login(email, password) {
 
 // Fonction de création d'un utilisateur
 export async function createUser(data) {
+
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users`, {
             method: 'POST',
@@ -120,6 +121,7 @@ export async function createUser(data) {
         });
 
         if (!response.ok) {
+           const errorText = await response.text();
             throw new Error('Échec de la création de l\'utilisateur.');
         }
 
