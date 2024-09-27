@@ -110,19 +110,20 @@ export async function login(email, password) {
 
 // Fonction de création d'un utilisateur
 export async function createUser(data) {
-
+console.log('Données envoyées :', data); // Pour déboguer les données
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users`, {
             method: 'POST',
-            headersrs: {
+            headers: {
                 'Content-Type': 'application/json'
-            },
+            },  
             body: JSON.stringify(data)
         });
 
         if (!response.ok) {
            const errorText = await response.text();
-            throw new Error('Échec de la création de l\'utilisateur.');
+            console.error('Détails de l\'erreur :', errorText); // Log de l'erreur
+    throw new Error('Échec de la création de l\'utilisateur : ' + errorText); // Inclure l'erreur dans le message
         }
 
         return await response.json();

@@ -35,16 +35,24 @@
          email,
          password,
        };
+
+
        const response = await createUser(data);
 
        console.log('Réponse de l\'API:', response);
 
        if(response && response.data) {
-         succesMessage = " inscription réussie!";
-         goto('/login');
-       } else {
-         errorMessage = "Erreur lors de l'inscription";
-       }
+        const userData = response.data;
+    if (userData.email === null) {
+        errorMessage = "Erreur : L'email n'a pas été créé correctement.";
+    } else {
+      succesMessage = "Inscription réussie!";
+      console.log('Redirection vers /login');
+        goto('/login');
+    }
+} else {
+    errorMessage = "Erreur lors de l'inscription";
+}
        } catch (error){
          errorMessage = "Error: " + error.message
        }
