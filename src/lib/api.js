@@ -219,27 +219,53 @@ export async function resetPasswordWithToken(token, newPassword) {
 }
 
       
-     // upload a file to the API
+// upload a file to the API
 export async function uploadFile(formData) {
     const token = localStorage.getItem('token'); // Récupération du token d'authentification
-console.log('Token utilisé pour le téléversement:', token);
+    console.log('Token utilisé pour le téléversement:', token);
+
     if (!token) {
         throw new Error('No authentication token found');
     }
 
+    // Étape 1 : Téléversement du fichier
     const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/files`, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${token}`,  // Envoi du token avec la requête
+            'Authorization': `Bearer ${token}`,
         },
-        body: formData // Envoi du fichier
+        body: formData
     });
 
     if (!response.ok) {
-    const errorResponse = await response.json();
-    console.error('Erreur lors du téléversement:', errorResponse);
-    throw new Error(`Échec du téléversement: ${response.status} - ${errorResponse.message}`);
-}
+        const errorResponse = await response.json();
+        console.error('Erreur lors du téléversement:', errorResponse);
+        throw new Error(`Échec du téléversement: ${response.status} - ${errorResponse.message}`);
+    }
 
-    return await response.json();
+    const data = await response.json();
+    console.log('Réponse du téléversement:', data);
+
+    // Vérification que le fichier a bien été téléversé
+    if (data && data.data && data.data.id) {
+        const fileId = data.data.id; // Récupérer l'ID du fichier
+        console.log('affichage fielID:', fileId);
+
+        // Récupération du contenu du fichier
+        const fileResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/assets/${fileId}?download`, { // Utiliser le bon endpoint pour récupérer le contenu
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+        
+        if (!fileResponse.ok) {
+            throw new Error('Échec de la récupération du contenu du fichier');
+        }
+
+        const fileContent = await fileResponse.text(); // Lire le contenu du fichier comme du texte
+        console.log('Contenu du fichier:', fileContent);
+        return { fileData: data, fileContent }; // Retourner les données du fichier et son contenu
+    }
+
+    throw new Error('Données du fichier non trouvées');
 }

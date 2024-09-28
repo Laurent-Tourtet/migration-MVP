@@ -1,61 +1,52 @@
 <script>
-  // Import correct de la fonction uploadFile depuis api.js
   import { uploadFile } from '$lib/api';
   let file;
   let fileName = '';
   let message = '';
   let loading = false;
+  let fileContent = ''; // Variable pour stocker le contenu du fichier
 
-  // Fonction pour téléverser le fichier
   async function handleUploadFile() {
-   
-    // Vérification si un fichier est sélectionné
     if (!file) {
       alert('Veuillez sélectionner un fichier');
       return;
     }
 
     loading = true;
-    console.log('Téléversement démarré'); // Log pour suivre le démarrage
+    console.log('Téléversement démarré');
 
     try {
-      // Création de l'objet FormData pour l'upload
       const formData = new FormData();
       formData.append('file', file);
-      console.log('FormData créé avec le fichier:', file); // Log pour vérifier le fichier
+      console.log('FormData créé avec le fichier:', file);
 
-      // Appel de la fonction upload dans api.js
-      const response = await uploadFile(formData);  // Correction ici avec le bon nom de fonction
-      console.log('Réponse de l\'API Directus:', response); // Log pour suivre la réponse
+      // Téléversement du fichier
+      const { fileData, fileContent: uploadedFileContent } = await uploadFile(formData);
+      console.log('Réponse de l\'API Directus:', fileData);
+      console.log('Contenu du fichier:', uploadedFileContent);
 
-      // Vérification de la réponse de l'API
-      if (!response.ok) {
-        throw new Error('Échec du téléversement'); // Log en cas d'échec
-      }
-
-      const data = await response.json();
-      console.log('Téléversement réussi, réponse de l\'API:', data); // Log en cas de succès
+      fileContent = uploadedFileContent; // Stocke le contenu du fichier pour l'affichage
 
       message = 'Fichier téléversé avec succès';
     } catch (error) {
-      console.error('Erreur lors du téléversement:', error); // Log pour capturer les erreurs
+      console.error('Erreur lors du téléversement:', error);
       message = 'Erreur lors du téléversement';
     } finally {
       loading = false;
-      console.log('Téléversement terminé'); // Log pour indiquer que le processus est fini
+      console.log('Téléversement terminé');
     }
   }
 
-  // Fonction pour déclencher la sélection de fichier
+  // Déclencher la sélection du fichier
   function triggerFileInput() {
     document.getElementById('file-input').click();
   }
 
-  // Fonction pour gérer le changement de fichier
+  // Gérer le changement de fichier
   function handleFileChange(event) {
     file = event.target.files[0];
     fileName = file ? file.name : '';
-    console.log('Fichier sélectionné:', fileName); // Log pour suivre le fichier sélectionné
+    console.log('Fichier sélectionné:', fileName);
   }
 </script>
 
@@ -67,14 +58,11 @@
   <!-- Bouton pour sélectionner un fichier -->
   <button type="button" on:click={triggerFileInput} class="file-select-button">
     Choisir un fichier à convertir en MySQL
-    <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7 10l5 5 5-5H7z"/>
-    </svg>
   </button>
 
   <!-- Afficher le nom du fichier si un fichier est sélectionné -->
   {#if fileName}
-    <div class="file-info"><img id="logo-file" src="sql.png"> {fileName}</div>
+    <div class="file-info">Nom du fichier: {fileName}</div>
   {/if}
 
   <!-- Bouton de soumission -->
@@ -89,14 +77,15 @@
   {#if message}
     <p>{message}</p>
   {/if}
+
+  <!-- Affichage du contenu du fichier converti -->
+  {#if fileContent}
+    <div class="file-content">
+      <h3>Contenu du fichier converti :</h3>
+      <pre>{fileContent}</pre>
+    </div>
+  {/if}
 </form>
-
-
-
-
-<!-- {:else}
-<p>Veuillez vous connecter pour accéder à ce service</p>
-{/if} -->
 
 <style>
   form {
@@ -166,5 +155,23 @@
     height: 2rem;
     fill: currentColor;
     margin-left: 0.5rem;
+  }
+
+  .file-content {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+  }
+
+  pre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 </style>
