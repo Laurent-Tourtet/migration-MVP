@@ -2,13 +2,18 @@ import { authToken, user } from '$lib/stores';
 
 // Fonction pour récupérer le token stocké
 export function getStoredToken() {
-    return localStorage.getItem('token');
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('token');
+    }
+    return null; // Côté serveur, on ne peut pas accéder à localStorage
 }
 
 // Fonction pour stocker le nouveau token
 export function storeToken(token) {
-    localStorage.setItem('token', token);
-    authToken.set(token);  // Met à jour le store Svelte
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('token', token);
+        authToken.set(token);
+    }
 }
 
 // Fonction pour rafraîchir le token
@@ -131,9 +136,11 @@ export async function createUser(data) {
 
 // Fonction de déconnexion
 export function logout() {
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+    }
     authToken.set(null);
     user.set(null);
-    localStorage.removeItem('token');
 }
 
 // Fonction pour récupérer le profil utilisateur
