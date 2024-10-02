@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+ import OpenAI from 'openai';
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY ;
 
@@ -11,6 +11,7 @@ const openai = new OpenAI({
 });
 
 export default openai;
+
 
 
 

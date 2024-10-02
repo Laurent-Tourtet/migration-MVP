@@ -42,13 +42,11 @@ export async function refreshToken() {
 export async function fetchWithAuth(url, options = {}) {
     let token = getStoredToken();
 
-    // Si le token n'existe pas, déconnecter l'utilisateur
     if (!token) {
         logout();
         throw new Error("Aucun token d'authentification trouvé.");
     }
 
-    // Ajout des en-têtes si non présents
     if (!options.headers) {
         options.headers = {};
     }
@@ -59,25 +57,23 @@ export async function fetchWithAuth(url, options = {}) {
     try {
         let response = await fetch(url, options);
 
-        // Si le token a expiré (401 Unauthorized), essayer de le rafraîchir
         if (response.status === 401) {
             console.log('Token expiré, tentative de rafraîchissement...');
             try {
-                token = await refreshToken();  // Rafraîchit le token
+                token = await refreshToken();  
                 options.headers['Authorization'] = `Bearer ${token}`;
-                response = await fetch(url, options);  // Répète la requête avec le nouveau token
-            } catch {
+                response = await fetch(url, options);  
+            } catch (refreshError) {
                 throw new Error('Échec du rafraîchissement du token et nouvelle tentative échouée.');
             }
         }
 
-        // Si la réponse est toujours invalide, lever une erreur
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Erreur HTTP! Statut: ${response.status}, ${errorText}`);
         }
 
-        return response.status === 204 ? null : response.json();  // Si la réponse est vide, ne pas renvoyer de JSON
+        return response.status === 204 ? null : await response.json();  
     } catch (error) {
         console.error('Erreur lors de la requête fetchWithAuth:', error);
         throw error;
@@ -103,14 +99,14 @@ export async function login(email, password) {
 
     const data = await response.json();
     console.log('Réponse login API:', data);
-    storeToken(data.data.access_token);  // Stocker le token d'accès
-    authToken.set(data.data.access_token);  // Met à jour le store Svelte
+    storeToken(data.data.access_token);  
+    authToken.set(data.data.access_token);  
     return data;
 }
 
 // Fonction de création d'un utilisateur
 export async function createUser(data) {
-console.log('Données envoyées :', data); // Pour déboguer les données
+    console.log('Données envoyées :', data); 
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users`, {
             method: 'POST',
@@ -121,9 +117,9 @@ console.log('Données envoyées :', data); // Pour déboguer les données
         });
 
         if (!response.ok) {
-           const errorText = await response.text();
-            console.error('Détails de l\'erreur :', errorText); // Log de l'erreur
-    throw new Error('Échec de la création de l\'utilisateur : ' + errorText); // Inclure l'erreur dans le message
+            const errorText = await response.text();
+            console.error('Détails de l\'erreur :', errorText); 
+            throw new Error('Échec de la création de l\'utilisateur : ' + errorText); 
         }
 
         return await response.json();
@@ -176,96 +172,39 @@ export async function passwordReset(email) {
         });
 
         if (response.status === 204) {
-            return { message: 'Un email de réinitialisation a été envoyé.' };
-        }
-
-        if (!response.ok) {
+            console.log('Email de réinitialisation envoyé avec succès.');
+            return true;
+        } else {
             const errorText = await response.text();
-            throw new Error(`Échec de la demande de réinitialisation: ${errorText}`);
+            throw new Error('Erreur lors de la demande de réinitialisation: ' + errorText);
         }
-
-        return response.json();
     } catch (error) {
         console.error('Erreur lors de la réinitialisation du mot de passe:', error);
         throw error;
     }
 }
 
-// Fonction pour réinitialiser le mot de passe avec le token
-export async function resetPasswordWithToken(token, newPassword) {
+// Fonction pour réinitialiser le mot de passe avec un token
+export async function resetPasswordWithToken(token, password) {
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/auth/password/reset`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                token: token,
-                password: newPassword,
-                confirm_password: newPassword
-            })
+            body: JSON.stringify({ token, password })
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`Échec de la réinitialisation du mot de passe: ${errorText}`);
+            throw new Error('Erreur lors de la réinitialisation du mot de passe: ' + errorText);
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log('Mot de passe réinitialisé avec succès:', data);
+        return data;
     } catch (error) {
         console.error('Erreur lors de la réinitialisation du mot de passe:', error);
         throw error;
     }
-}
-
-      
-// upload a file to the API
-export async function uploadFile(formData) {
-    const token = localStorage.getItem('token'); // Récupération du token d'authentification
-    console.log('Token utilisé pour le téléversement:', token);
-
-    if (!token) {
-        throw new Error('No authentication token found');
-    }
-
-    // Étape 1 : Téléversement du fichier
-    const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/files`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-        },
-        body: formData
-    });
-
-    if (!response.ok) {
-        const errorResponse = await response.json();
-        console.error('Erreur lors du téléversement:', errorResponse);
-        throw new Error(`Échec du téléversement: ${response.status} - ${errorResponse.message}`);
-    }
-
-    const data = await response.json();
-    console.log('Réponse du téléversement:', data);
-
-    // Vérification que le fichier a bien été téléversé
-    if (data && data.data && data.data.id) {
-        const fileId = data.data.id; // Récupérer l'ID du fichier
-        console.log('affichage fielID:', fileId);
-
-        // Récupération du contenu du fichier
-        const fileResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/assets/${fileId}?download`, { // Utiliser le bon endpoint pour récupérer le contenu
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        });
-        
-        if (!fileResponse.ok) {
-            throw new Error('Échec de la récupération du contenu du fichier');
-        }
-
-        const fileContent = await fileResponse.text(); // Lire le contenu du fichier comme du texte
-        console.log('Contenu du fichier:', fileContent);
-        return { fileData: data, fileContent }; // Retourner les données du fichier et son contenu
-    }
-
-    throw new Error('Données du fichier non trouvées');
 }

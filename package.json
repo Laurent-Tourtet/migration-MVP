@@ -6,7 +6,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-                "start": "vite preview",
+		"start": "node build",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
@@ -28,7 +28,8 @@
 	"dependencies": {
 		"@sveltejs/adapter-node": "^5.2.3",
 		"dotenv": "^16.4.5",
-		"openai": "^4.62.0",
+		"node-fetch": "^3.3.2",
+		"openai": "^4.65.0",
 		"uuid": "^10.0.0",
 		"writable": "^0.1.0"
 	}

@@ -1,91 +1,114 @@
 <script>
-  import { uploadFile } from '$lib/api';
-  let file;
-  let fileName = '';
-  let message = '';
-  let loading = false;
-  let fileContent = ''; // Variable pour stocker le contenu du fichier
+  import { createEventDispatcher } from 'svelte';
+  import { fetchWithAuth } from '$lib/api';
 
-  async function handleUploadFile() {
+  // Import des variables d'environnement
+  const directusUrl = import.meta.env.VITE_DIRECTUS_URL;
+  const openaiUrl = import.meta.env.VITE_OPENAI_URL;
+  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+  let fileInput;
+  const dispatch = createEventDispatcher();
+
+  async function handleUpload() {
+    const file = fileInput.files[0];
+
     if (!file) {
-      alert('Veuillez sélectionner un fichier');
-      return;
+        alert('Veuillez sélectionner un fichier.');
+        return;
     }
 
-    loading = true;
-    console.log('Téléversement démarré');
+    // Vérification que le fichier est bien un fichier .sql
+    if (file.type !== 'text/plain' && !file.name.endsWith('.sql')) {
+        alert('Veuillez sélectionner un fichier .sql valide.');
+        return;
+    }
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      console.log('FormData créé avec le fichier:', file);
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const fileContent = event.target.result;
 
-      // Téléversement du fichier
-      const { fileData, fileContent: uploadedFileContent } = await uploadFile(formData);
-      console.log('Réponse de l\'API Directus:', fileData);
-      console.log('Contenu du fichier:', uploadedFileContent);
+            try {
+                // Requête vers l'API OpenAI pour la conversion
+                const conversionResponse = await fetch(openaiUrl,  {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [
+                            { role: 'system', content: 'You are a database conversion expert.' },
+                            {
+                                role: "user",
+                                content: `Convert the following PostgreSQL query to MySQL: ${fileContent}`
+                            }
+                        ],
+                        max_tokens: 3000,
+                        temperature: 0.3
+                    })
+                });
 
-      fileContent = uploadedFileContent; // Stocke le contenu du fichier pour l'affichage
+                if (!conversionResponse.ok) {
+                    const errorText = await conversionResponse.text();
+                    throw new Error(`Erreur lors de la conversion du fichier: ${errorText}`);
+                }
 
-      message = 'Fichier téléversé avec succès';
+                const convertedFile = await conversionResponse.json();
+
+                // LOGGING DE LA CONVERSION
+                console.log('Contenu converti:', convertedFile.choices[0].message.content);
+
+                // Préparation du formulaire pour l'envoi à Directus
+                const formData = new FormData();
+                const convertedContent = convertedFile.choices[0].message.content;
+
+                // Assurez-vous que le contenu est une chaîne de caractères valide
+                const blob = new Blob([convertedContent], { type: 'text/plain' });
+                formData.append('file', blob, 'converted-file.sql');
+
+                // LOGGING DU FORM DATA
+                for (const [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
+
+                // Requête pour envoyer le fichier converti vers Directus
+                const directusResponse = await fetchWithAuth(`${directusUrl}/files`, {
+                    method: 'POST',
+                    
+                    body: formData,
+                });
+
+                if (!directusResponse.ok) {
+                    const errorText = await directusResponse.text();
+                    throw new Error(`Erreur lors du téléversement du fichier à Directus: ${errorText}`);
+                }
+
+                const uploadResult = await directusResponse.json();
+                dispatch('conversionSuccess', { response: uploadResult });
+
+            } catch (error) {
+                console.error('Erreur lors de la conversion ou du téléversement :', error);
+                dispatch('conversionError', { error });
+            }
+        };
+
+        reader.readAsText(file);
     } catch (error) {
-      console.error('Erreur lors du téléversement:', error);
-      message = 'Erreur lors du téléversement';
-    } finally {
-      loading = false;
-      console.log('Téléversement terminé');
+        console.error('Erreur lors du téléchargement du fichier :', error);
+        alert('Une erreur est survenue lors du téléchargement du fichier.');
     }
-  }
-
-  // Déclencher la sélection du fichier
-  function triggerFileInput() {
-    document.getElementById('file-input').click();
-  }
-
-  // Gérer le changement de fichier
-  function handleFileChange(event) {
-    file = event.target.files[0];
-    fileName = file ? file.name : '';
-    console.log('Fichier sélectionné:', fileName);
-  }
+}
 </script>
 
-<!-- Formulaire de téléversement -->
-<form on:submit|preventDefault={handleUploadFile}>
-  <!-- Input caché pour le fichier -->
-  <input id="file-input" type="file" accept=".sql" style="display:none" on:change={handleFileChange} />
-
-  <!-- Bouton pour sélectionner un fichier -->
-  <button type="button" on:click={triggerFileInput} class="file-select-button">
-    Choisir un fichier à convertir en MySQL
-  </button>
-
-  <!-- Afficher le nom du fichier si un fichier est sélectionné -->
-  {#if fileName}
-    <div class="file-info">Nom du fichier: {fileName}</div>
-  {/if}
-
-  <!-- Bouton de soumission -->
-  <button type="submit" class="submit-button" disabled={loading}>Convertir</button>
-
-  <!-- Message de conversion en cours -->
-  {#if loading}
-    <p>Conversion en cours...</p>
-  {/if}
-
-  <!-- Message de succès ou d'erreur -->
-  {#if message}
-    <p>{message}</p>
-  {/if}
-
-  <!-- Affichage du contenu du fichier converti -->
-  {#if fileContent}
-    <div class="file-content">
-      <h3>Contenu du fichier converti :</h3>
-      <pre>{fileContent}</pre>
-    </div>
-  {/if}
+<form on:submit|preventDefault={handleUpload}>
+  <label for="file">Choisissez un fichier SQL :</label>
+  <input id="file" type="file" bind:this={fileInput} accept=".sql" />
+  <button type="submit" class="submit-button">Envoyer pour conversion</button>
 </form>
+
 
 <style>
   form {
@@ -96,40 +119,19 @@
     font-family: Arial, sans-serif;
   }
 
-  .file-select-button {
-    width: 600px;
-    padding: 0.5rem;
-    background-color: #f8f9fa;
-    border: 1px solid #007bff;
-    border-radius: 5px;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 1rem;
-    text-align: center;
-    color: #007bff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  label {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
   }
 
-  .file-select-button:hover {
-    background-color: #e2e6ea;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-
-  .file-info {
+  input[type="file"] {
+    margin-bottom: 20px;
     border: 1px solid #007bff;
     border-radius: 5px;
-    margin-top: 0.5rem;
     padding: 10px;
-    font-size: 1.3rem;
-    color: #1c1e1f;
-  }
-
-  #logo-file {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
+    font-size: 1rem;
+    color: #333;
   }
 
   .submit-button {
@@ -148,30 +150,5 @@
 
   .submit-button:hover {
     background-color: #0056b3;
-  }
-
-  .icon {
-    width: 2rem;
-    height: 2rem;
-    fill: currentColor;
-    margin-left: 0.5rem;
-  }
-
-  .file-content {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: monospace;
-  }
-
-  pre {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 5px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
   }
 </style>
