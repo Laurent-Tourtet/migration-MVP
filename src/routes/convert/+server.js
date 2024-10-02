@@ -1,12 +1,11 @@
 import { json } from '@sveltejs/kit';
-//import { fetchWWithAuth } from '$lib/api';
 import openai from '../openai/config/openaiConfig';
 import { v4 as uuidv4 } from 'uuid';
 
- // Import des variables d'environnement
- const directusUrl = import.meta.env.VITE_DIRECTUS_URL;
- const openaiUrl = import.meta.env.VITE_OPENAI_URL;
- const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+// Import des variables d'environnement
+const directusUrl = import.meta.env.VITE_DIRECTUS_URL;
+const openaiUrl = import.meta.env.VITE_OPENAI_URL;
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
 // Fonction utilitaire pour détecter le dialecte
 function detectDialect(fileContent) {
@@ -44,7 +43,6 @@ async function convertToMySQL(fileContent, dialect) {
             });
 
             const data = await response.json();
-
             console.log('Données après conversion en JSON :', data);
 
             // Vérifiez si la réponse est valide avant d'aller plus loin
@@ -64,7 +62,6 @@ async function convertToMySQL(fileContent, dialect) {
     }
 }
 
-
 // Fonction pour téléverser le fichier converti dans Directus
 async function uploadToDirectus(fileName, content, token) {
     const formData = new FormData();
@@ -80,12 +77,16 @@ async function uploadToDirectus(fileName, content, token) {
         body: formData
     });
 
+    const responseData = await response.json(); // Convertis la réponse en JSON
+
+    console.log('Réponse de Directus :', responseData);
+
     if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Échec du téléversement : ${errorText}`);
     }
 
-    return await response.json();
+    return responseData.data; // On retourne uniquement la propriété "data" qui contient les infos du fichier
 }
 
 // Fonction pour gérer la requête POST
@@ -109,13 +110,22 @@ export async function POST({ request }) {
 
         const convertedContent = await convertToMySQL(fileContent, detectedDialect);
 
+        console.log('Type de convertedContent:', typeof convertedContent);
+        console.log('Valeur de convertedContent:', convertedContent);
+
         if (!convertedContent || convertedContent.includes('Erreur')) {
             return json({ message: 'Erreur : conversion échouée.' }, { status: 400 });
         }
 
-        const uploadedFile = await uploadToDirectus(`${uuidv4()}.sql`, convertedContent, token);
+        const uploadedFile = await uploadToDirectus(`Convert_${uuidv4()}.sql`, convertedContent, token);
 
-        return json({ message: 'Conversion réussie', uploadedFile });
+        // On s'assure que l'objet "uploadedFile" contient bien la propriété "filename_download"
+        if (uploadedFile && uploadedFile.filename_download) {
+            return json({ message: 'Conversion réussie', uploadedFile: uploadedFile.filename_download });
+        } else {
+            return json({ message: 'Erreur : Téléversement réussi mais pas de nom de fichier disponible.' }, { status: 500 });
+        }
+
     } catch (error) {
         console.error('Erreur lors de la conversion :', error.message || error);
         return json({ message: `Erreur lors de la conversion du fichier : ${error.message}` }, { status: 500 });
