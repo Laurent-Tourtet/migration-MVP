@@ -119,11 +119,11 @@ export async function POST({ request }) {
 
         const uploadedFile = await uploadToDirectus(`Convert_${uuidv4()}.sql`, convertedContent, token);
 
-        // On s'assure que l'objet "uploadedFile" contient bien la propriété "filename_download"
-        if (uploadedFile && uploadedFile.filename_download) {
-            return json({ message: 'Conversion réussie', uploadedFile: uploadedFile.filename_download });
+        // On retourne l'ID du fichier pour le lien de téléchargement
+        if (uploadedFile && uploadedFile.id) {
+            return json({ message: 'Conversion réussie', fileId: uploadedFile.id });
         } else {
-            return json({ message: 'Erreur : Téléversement réussi mais pas de nom de fichier disponible.' }, { status: 500 });
+            return json({ message: 'Erreur : Téléversement réussi mais pas de fichier disponible.' }, { status: 500 });
         }
 
     } catch (error) {

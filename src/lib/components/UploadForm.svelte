@@ -1,74 +1,63 @@
 <script>
-  import { user } from '$lib/stores';
   let file;
   let fileName = '';
   let message = '';
   let errorMessage = '';
   let loading = false;
   let convertedContent = '';
-  let fileId = ''; // Stocker l'ID du fichier converti
+  let uploadedFileName = ''; // Variable pour stocker le nom du fichier converti
   
-  // Fonction pour téléverser le fichier et déclencher la conversion
   async function uploadFile() {
       if (!file) {
-          alert('Veuillez sélectionner un fichier.');
+          alert('Veuillez sélectionner un fichier');
           return;
       }
 
       loading = true; // Démarrer l'animation de chargement
-      errorMessage = ''; // Réinitialiser les messages d'erreur et de succès
-      message = '';
-      convertedContent = '';
 
-      try {
-          // Lire le contenu du fichier sélectionné
-          const fileContent = await file.text();
+      // Lire le contenu du fichier
+      const fileContent = await file.text();
 
-          // Récupérer le token d'authentification stocké (côté client)
-          const token = localStorage.getItem('token');
-          if (!token) {
-              throw new Error('Aucun token trouvé. Veuillez vous authentifier.');
-          }
-          console.log('Token récupéré:', token); // Afficher le token dans la console
+      // Récupérer le token stocké (côté client)
+      const token = localStorage.getItem('token');
+      console.log('Token récupéré:', token); // Afficher le token dans la console
 
-          // Envoyer le contenu du fichier au serveur pour conversion
-          const response = await fetch('/convert', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-              },
-              body: JSON.stringify({ fileContent })
-          });
+      // Envoyer le fichier au serveur pour conversion
+      const response = await fetch('/convert', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ fileContent })
+      });
 
-          loading = false; // Arrêter l'animation de chargement
+      loading = false; // Arrêter l'animation de chargement
 
-          if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`Erreur de conversion côté serveur : ${errorText}`);
-          }
-
-          const data = await response.json();
-          console.log('Données de réponse:', data); // Vérifier la structure des données
-
-          message = 'Fichier converti avec succès.';
-          convertedContent = data.uploadedFile; // Nom du fichier converti
-          fileId = data.fileId; // Stocker l'ID du fichier converti si nécessaire
-          console.log('Nom du fichier converti:', convertedContent);
-
-      } catch (error) {
-          loading = false;
-          console.error('Erreur lors du téléversement ou de la conversion :', error);
-          errorMessage = `Erreur : ${error.message}`;
+      // Gérer les réponses
+      if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Erreur de conversion côté serveur :', errorText);
+          errorMessage = `Erreur lors de la conversion : ${errorText}`; // Mettre à jour le message d'erreur
+          return; // Sortir de la fonction
       }
+
+      const data = await response.json();
+      console.log('Données de réponse:', data); // Vérifier la structure des données
+
+      message = 'Fichier converti avec succès.';
+      
+      const fileId = data.fileId; 
+      console.log('ID du fichier converti:', fileId);
+
+      convertedContent = `https://directus.sqlconverter.fr/assets/${fileId}?download&access_token=${token}`; // Utiliser le token récupéré pour l'URL
+      console.log('URL du fichier converti:', convertedContent); // Vérifie l'URL dans la console
   }
 
-  // Fonction pour ouvrir le sélecteur de fichiers
   function triggerFileInput() {
       document.getElementById('file-input').click();
   }
-
-  // Fonction pour gérer le changement de fichier
+  
   function handleFileChange(event) {
       file = event.target.files[0];
       fileName = file ? file.name : '';
@@ -90,17 +79,18 @@
 {/if}
 
 {#if errorMessage}
-  <p style="color: red;">{errorMessage}</p> <!-- Affiche le message d'erreur -->
+  <p style="color: red;">{errorMessage}</p>  <!-- Affiche le message d'erreur -->
 {/if}
 
 {#if convertedContent}
   <div class="converted-content">
       <h3>Fichier converti :</h3>
       <p>Téléchargez votre fichier : 
-          <a href={`https://www.sqlconverter.fr/files/${convertedContent}`} download>{convertedContent}</a>
+          <a href={convertedContent} download>{fileName}</a> <!-- Utiliser le nom du fichier original -->
       </p>
   </div>
 {/if}
+
 
 <style>
   form {
