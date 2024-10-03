@@ -1,4 +1,5 @@
 <script>
+    import { user} from '$lib/stores'; // Importer le store user
   let file;
   let fileName = '';
   let message = '';
@@ -21,6 +22,11 @@
       // Récupérer le token stocké (côté client)
       const token = localStorage.getItem('token');
       console.log('Token récupéré:', token); // Afficher le token dans la console
+      if (!token) {
+          errorMessage = 'Veuillez vous connecter pour convertir le fichier.'; // Mettre à jour le message d'erreur
+          loading = false; // Arrêter l'animation de chargement
+          return; // Sortir de la fonction
+      }
 
       // Envoyer le fichier au serveur pour conversion
       const response = await fetch('/convert', {

@@ -1,5 +1,5 @@
 <script>
-
+import { user } from '$lib/stores';
 </script>
 
 <main>
@@ -8,7 +8,12 @@
         <a href="/price">Price</a>
         <a href="/login">Login</a>
         <a href="/register">Register</a>
-        <a href="/logout">Logout</a>
+        {#if $user}       
+        <a href="/logout" on:click={(e) => { 
+            e.preventDefault(); 
+            user.set(null); 
+        }}>Logout</a>
+        {/if}
     </nav>
 </main>
 

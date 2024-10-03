@@ -1,4 +1,5 @@
 <script>
+    import { user} from '$lib/stores';
     import Header from '$lib/components/Header.svelte';
     import Connect from '$lib/components/Connect.svelte';
     import UploadForm from '$lib/components/UploadForm.svelte';
@@ -8,12 +9,12 @@
 <h1>Converter PostgreSQL to MySQL</h1>
 <Header />
 <Connect />
-
+{#if !$user}
 <Price />
-
-
+{/if}
+{#if $user}
 <UploadForm />
-
+{/if}
 </main>
 <style>
     main {
