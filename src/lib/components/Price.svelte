@@ -1,56 +1,70 @@
 <script>
-    import { goto } from '$app/navigation';
-import { user} from '$lib/stores';
-function handleSignupClick() {
- goto('/login');
-}
-async function subscribe(planId) {
-   const response = await fetch('/checkout', {
-     method: 'POST',
-     headers: {
-       'Content-Type': 'application/json',
-     },
-     body: JSON.stringify({ planId })
-   });
+  import { goto } from '$app/navigation';
+  import { user } from '$lib/stores';
+  import { loadStripe } from '@stripe/stripe-js';
 
-   const { sessionId } = await response.json();
+  let stripe;
 
-   if (sessionId) {
-     goto(`https://checkout.stripe.com/pay/${sessionId}`);
-   } else {
-     console.error('Erreur lors de la création de la session Stripe');
-   }
- }
+  // Chargement de Stripe avec la clé publique
+  (async () => {
+    stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+  })();
+
+  function handleSignupClick() {
+    goto('/login');
+  }
+
+  async function subscribe(planId) {
+    const response = await fetch('/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ planId })
+    });
+
+    const { sessionId } = await response.json();
+
+    if (sessionId) {
+      // Redirection vers Stripe avec la méthode recommandée
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      if (error) {
+        console.error('Erreur lors de la redirection vers Stripe :', error);
+      }
+    } else {
+      console.error('Erreur lors de la création de la session Stripe');
+    }
+  }
 </script>
+
 {#if !$user}
-    
-
 <main class="pricing-container">
-    <div class="pricing-card">
-        <h2>Free</h2>
-        <p><strong>5</strong> requêtes par mois</p><br>
-        <p> Idéal pour les utilisateurs occasionnels ou ceux qui veulent essayer le service.</p>
-        <p class="price">Gratuit</p>
-        <button class="subscribe-btn" on:click={() => subscribe('price_1PtAGrRpckCWPiEzgF0BzBgi')}>Souscrire</button>
-    </div>
+  <div class="pricing-card">
+    <h2>Free</h2>
+    <p><strong>5</strong> requêtes par mois</p><br>
+    <p> Idéal pour les utilisateurs occasionnels ou ceux qui veulent essayer le service.</p>
+    <p class="price">Gratuit</p>
+    <button class="subscribe-btn" on:click={() => subscribe('price_1PtAGrRpckCWPiEzgF0BzBgi')}>Souscrire</button>
+  </div>
 
-    <div class="pricing-card">
-        <h2>Standard</h2>
-        <p><strong>250</strong> requêtes par mois</p><br>
-        <p>Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p>
-        <p class="price">10,99 €/mois</p>
-        <button class="subscribe-btn" on:click={() => subscribe('price_1PtAJIRpckCWPiEzE0TiUnwG')}>Souscrire</button>
-    </div>
+  <div class="pricing-card">
+    <h2>Standard</h2>
+    <p><strong>250</strong> requêtes par mois</p><br>
+    <p>Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p>
+    <p class="price">10,99 €/mois</p>
+    <button class="subscribe-btn" on:click={() => subscribe('price_1PtAJIRpckCWPiEzE0TiUnwG')}>Souscrire</button>
+  </div>
 
-    <div class="pricing-card">
-        <h2>Unlimited</h2>
-        <p><strong>Requêtes illimitées</strong></p><br>
+  <div class="pricing-card">
+    <h2>Unlimited</h2>
+    <p><strong>Requêtes illimitées</strong></p><br>
     Pour les entreprises ou les développeurs ayant des besoins intensifs et réguliers
-        <p class="price">69,99 €/mois</p>
-        <button class="subscribe-btn" on:click={() => subscribe('price_1PtAK5RpckCWPiEzIqcCPaU1')}>Souscrire</button>
-    </div>
+    <p class="price">69,99 €/mois</p>
+    <button class="subscribe-btn" on:click={() => subscribe('price_1PtAK5RpckCWPiEzIqcCPaU1')}>Souscrire</button>
+  </div>
 </main>
 {/if}
+
 <style>
   /* Conteneur principal */
   .pricing-container {

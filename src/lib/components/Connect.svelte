@@ -17,15 +17,15 @@
        
         .paragraph {
             width: 70%;
-            background-color: rgb(105, 112, 118);
+            /* background-color: rgb(105, 112, 118); */
             margin: 20px auto 0 auto;
             text-align: center;
-            border-radius: 5px;
+            /* border-radius: 5px; */
             padding: 20px;
             font-size: 1.2rem;
-            color: #101111;
-     text-shadow: 2px 2px 4px #e7dada;
-     box-shadow: 1px 0 5px #333;
+            color: #063b69;
+     text-shadow: 2px 2px 4px #f8f5f5;
+     /* box-shadow: 1px 0 5px #333; */
         }
         
         

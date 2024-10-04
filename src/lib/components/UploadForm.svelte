@@ -73,22 +73,10 @@
 <form on:submit|preventDefault={uploadFile}>
   <label for="file">Choisissez un fichier SQL :</label>
   <input id="file" type="file" on:change={handleFileChange} accept=".sql" />
-  <button type="submit" class="submit-button">Envoyer pour conversion</button>
-</form>
-
-{#if loading}
+  {#if loading}
   <p>Chargement en cours...</p>
 {/if}
-
-{#if message}
-  <p>{message}</p>
-{/if}
-
-{#if errorMessage}
-  <p style="color: red;">{errorMessage}</p>  <!-- Affiche le message d'erreur -->
-{/if}
-
-{#if convertedContent}
+  {#if convertedContent}
   <div class="converted-content">
       <h3>Fichier converti :</h3>
       <p>Téléchargez votre fichier : 
@@ -96,6 +84,22 @@
       </p>
   </div>
 {/if}
+{#if message}
+  <p>{message}</p>
+{/if}
+{#if errorMessage}
+  <p style="color: red;">{errorMessage}</p>  <!-- Affiche le message d'erreur -->
+{/if}
+  <button type="submit" class="submit-button">Envoyer pour conversion</button>
+</form>
+
+
+
+
+
+
+
+
 
 
 <style>
@@ -103,6 +107,7 @@
       display: flex;
       flex-direction: column;
       margin-top: 50px;
+      margin-bottom: 80px;
       align-items: center;
       font-family: Arial, sans-serif;
   }

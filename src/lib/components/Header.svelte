@@ -5,7 +5,6 @@ import { user } from '$lib/stores';
 <main>
     <nav>
         <a href="/">Home</a>
-        <a href="/price">Price</a>
         <a href="/login">Login</a>
         <a href="/register">Register</a>
         {#if $user}       

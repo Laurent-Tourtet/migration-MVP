@@ -32,7 +32,14 @@ async function convertToMySQL(fileContent, dialect) {
                     messages: [
                         {
                             role: "system",
-                            content: "Convertir un fichier PostgreSQL à MySQL."
+                            content:  `
+Tu es un expert en base de données, ta tâche est de convertir des requêtes PostgreSQL en MySQL en prenant en compte les spécificités suivantes :
+1. Remplacer le type SERIAL par INT AUTO_INCREMENT.
+2. Les triggers doivent être écrits avec la syntaxe MySQL, en utilisant BEGIN ... END; et en mettant à jour les stocks dans la table 'products' après l'insertion d'items.
+3. Les fonctions PL/pgSQL doivent être converties en procédures MySQL et utiliser la clause DELIMITER.
+4. Remplacer la fonction ILIKE par LIKE en utilisant CONCAT.
+5. Si une séquence ou fonction PostgreSQL n'est pas supportée dans MySQL, proposer une alternative via des requêtes séparées ou une logique au niveau de l'application.
+`
                         },
                         {
                             role: "user",
