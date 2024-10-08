@@ -23,6 +23,10 @@ import { user } from '$lib/stores';
             <p>Logout</p>
           </a>
         {/if}
+         <a href="/doc">
+            <i class="fas fa-book"></i>
+            <p>Doc</p>
+          </a>
       </nav>
 </main>
 

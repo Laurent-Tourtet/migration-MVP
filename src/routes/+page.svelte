@@ -4,6 +4,7 @@
     import Connect from '$lib/components/Connect.svelte';
     import UploadForm from '$lib/components/UploadForm.svelte';
     import Price from '$lib/components/Price.svelte';
+    import Footer from '../lib/components/Footer.svelte';
 </script>
 <main>
     <Header />
@@ -17,6 +18,7 @@
 <UploadForm />
 {/if}
 </main>
+<Footer />
 <style>
     main {
         display: flex;
