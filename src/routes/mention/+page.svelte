@@ -16,14 +16,17 @@
     <section>
         <h2>2. Hébergement</h2>
         <p>
-            Le site est hébergé par <strong>AWS</strong>, <strong>[adresse de l’hébergeur]</strong>.
+            Le site est hébergé par <strong>AWS</strong>, <strong>Amazon Web Services, Inc.
+                410 Terry Avenue North
+                Seattle, WA 98109-5210
+                États-Unis</strong>.
         </p>
     </section>
 
     <section>
         <h2>3. Responsable de la Publication</h2>
         <p>
-            Le directeur de la publication est <strong>[Nom du responsable]</strong>, joignable à l'adresse email suivante : <strong>[email]</strong>.
+            Le directeur de la publication est <strong>Laurent TOURTET</strong>, joignable à l'adresse email suivante : <strong>contact@yautedev.fr</strong>.
         </p>
     </section>
 
@@ -38,8 +41,8 @@
     <section>
         <h2>5. Protection des Données Personnelles</h2>
         <p>
-            Les données personnelles collectées sur le site sont destinées à l'usage exclusif de <strong>Votre Société</strong>. Conformément à la loi "Informatique et Libertés", 
-            vous disposez d'un droit d'accès, de modification et de suppression des données vous concernant. Vous pouvez exercer ce droit en nous contactant à <strong>[email]</strong>.
+            Les données personnelles collectées sur le site sont destinées à l'usage exclusif de <strong>YAUTEDEV</strong>. Conformément à la loi "Informatique et Libertés", 
+            vous disposez d'un droit d'accès, de modification et de suppression des données vous concernant. Vous pouvez exercer ce droit en nous contactant à <strong>contact@yautedev.fr</strong>.
         </p>
     </section>
 

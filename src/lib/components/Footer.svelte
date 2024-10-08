@@ -12,15 +12,15 @@
 
         <div class="footer-social">
             <a href="https://x.com/YauteDev" target="_blank" rel="noopener noreferrer">
-                <img src="/icons/twitter.svg" alt="Twitter" />
+              <i class="fab fa-twitter"></i>
             </a>
             <a href="https://www.facebook.com/profile.php?id=61557364854477" target="_blank" rel="noopener noreferrer">
-                <img src="/icons/facebook.svg" alt="Facebook" />
+              <i class="fab fa-facebook"></i>
             </a>
             <a href="https://www.linkedin.com/in/tourtet-laurent/" target="_blank" rel="noopener noreferrer">
-                <img src="/icons/linkedin.svg" alt="LinkedIn" />
+              <i class="fab fa-linkedin"></i>
             </a>
-        </div>
+          </div>
 
         <p>&copy; {year} SQL Converter. Tous droits réservés.</p>
     </div>
@@ -56,11 +56,14 @@
 
     .footer-social a {
         margin: 0 10px;
+    color: inherit; /* Assurez-vous que les icônes héritent de la couleur du texte */
+    text-decoration: none;
     }
 
-    .footer-social img {
+    .footer-social i {
         width: 24px;
         height: 24px;
+        font-size: 24px; /* Ajustez la taille des icônes selon vos besoins */
     }
 
     p {
