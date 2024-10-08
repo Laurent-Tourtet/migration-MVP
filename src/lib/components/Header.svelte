@@ -5,24 +5,25 @@ import { user } from '$lib/stores';
 <main>
     <nav>
         <a href="/">
-            <i class="fas fa-home"></i>
-            <p>Home</p>
+          <i class="fas fa-home"></i>
+          <p>Home</p>
         </a>
-        <a href="/login">
+        {#if !$user}
+          <a href="/login">
             <i class="fas fa-sign-in-alt"></i>
             <p>Login</p>
-        </a>
-        <!-- <a href="/register">Register</a> -->
-        {#if $user}       
-        <a href="/logout" on:click={(e) => { 
+          </a>
+        {/if}
+        {#if $user}
+          <a href="/logout" on:click={(e) => { 
             e.preventDefault(); 
             user.set(null); 
-        }}>
+          }}>
             <i class="fas fa-sign-out-alt"></i>
             <p>Logout</p>
-        </a>
+          </a>
         {/if}
-    </nav>
+      </nav>
 </main>
 
 <style>
