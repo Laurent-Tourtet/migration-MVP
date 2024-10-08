@@ -40,16 +40,16 @@
 {#if !$user}
 <main class="pricing-container">
   <div class="pricing-card">
-    <h2>Free</h2>
-    <p><strong>5</strong> requêtes par mois</p><br>
-    <p> Idéal pour les utilisateurs occasionnels ou ceux qui veulent essayer le service.</p>
+    <h2>Demo</h2>
+    <p><strong>7</strong> Jours d'essai gratuits</p><br>
+    <p>Essayez notre convertisseur gratuitement pendant 7 jours.</p>
     <p class="price">Gratuit</p>
     <button class="subscribe-btn" on:click={() => subscribe('price_1PtAGrRpckCWPiEzgF0BzBgi')}>Souscrire</button>
   </div>
 
   <div class="pricing-card">
     <h2>Standard</h2>
-    <p><strong>250</strong> requêtes par mois</p><br>
+    <p><strong>100</strong> requêtes par mois</p><br>
     <p>Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p>
     <p class="price">10,99 €/mois</p>
     <button class="subscribe-btn" on:click={() => subscribe('price_1PtAJIRpckCWPiEzE0TiUnwG')}>Souscrire</button>
