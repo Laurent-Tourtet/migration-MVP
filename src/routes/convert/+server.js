@@ -4,8 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Import des variables d'environnement
 const directusUrl = import.meta.env.VITE_DIRECTUS_URL;
-const openaiUrl = import.meta.env.VITE_OPENAI_URL;
+const openaiUrl = import.meta.env.VITE_OPENAI_API_URL;
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+console.log('URL OpenAI :', openaiUrl);
+
 
 // Fonction utilitaire pour détecter le dialecte
 function detectDialect(fileContent) {

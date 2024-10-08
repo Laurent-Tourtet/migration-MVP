@@ -23,6 +23,12 @@ export async function POST({ request }) {
 
     // Gérer l'événement ici
     switch (event.type) {
+        case 'invoice.payment_succeeded':
+            const invoice = event.data.object;
+            // Gère la réussite du paiement
+            console.log('Payment succeeded:', invoice);
+            break;
+
         case 'checkout.session.completed': {
             const session = event.data.object;
             const email = session.customer_details.email; // Utiliser customer_details pour récupérer l'email

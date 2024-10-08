@@ -6,7 +6,7 @@ import { user } from '$lib/stores';
     <nav>
         <a href="/">Home</a>
         <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        <!-- <a href="/register">Register</a> -->
         {#if $user}       
         <a href="/logout" on:click={(e) => { 
             e.preventDefault(); 
@@ -18,7 +18,7 @@ import { user } from '$lib/stores';
 
 <style>
     main {
-        width: 40%;
+        width: 20%;
         border-radius: 15px;
         padding: 5px 0;
         background-color: #063b69;
