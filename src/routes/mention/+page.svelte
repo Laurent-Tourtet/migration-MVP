@@ -1,10 +1,14 @@
 <script>
+    
     export let title = "Mentions Légales";
 </script>
 
 <main>
     <h1>{title}</h1>
-
+    <a href="/">
+        <i class="fas fa-angle-double-left"></i>
+        <i class="fas fa-home"></i>
+      </a>
     <section>
         <h2>1. Éditeur du Site</h2>
         <p>
@@ -64,9 +68,20 @@
 
     h1, h2 {
         color: #007bff;
+        text-align: center;
+        margin-bottom: 30px;
     }
 
     p {
         margin-bottom: 20px;
     }
+    a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
+  i {
+    margin-right: 5px; /* Ajustez l'espacement entre les icônes si nécessaire */
+  }
 </style>
