@@ -6,14 +6,21 @@ import { user } from '$lib/stores';
     <nav>
         <a href="/">
             <i class="fas fa-home"></i>
-          </a>
-        <a href="/login">Login</a>
+            <p>Home</p>
+        </a>
+        <a href="/login">
+            <i class="fas fa-sign-in-alt"></i>
+            <p>Login</p>
+        </a>
         <!-- <a href="/register">Register</a> -->
         {#if $user}       
         <a href="/logout" on:click={(e) => { 
             e.preventDefault(); 
             user.set(null); 
-        }}>Logout</a>
+        }}>
+            <i class="fas fa-sign-out-alt"></i>
+            <p>Logout</p>
+        </a>
         {/if}
     </nav>
 </main>
@@ -21,9 +28,9 @@ import { user } from '$lib/stores';
 <style>
     main {
         width: 20%;
-        border-radius: 15px;
+        border-radius: 5px;
         padding: 5px 0;
-        background-color: #063b69;
+        background-color: #063b69; 
         display: flex;
         flex-direction: column;
         align-items: center;

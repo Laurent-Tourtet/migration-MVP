@@ -6,8 +6,9 @@
     import Price from '$lib/components/Price.svelte';
 </script>
 <main>
+    <Header />
 <h1>Converter PostgreSQL to MySQL</h1>
-<Header />
+
 <Connect />
 {#if !$user}
 <Price />
@@ -22,7 +23,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-top: 50px;
+        /* margin-top: 50px; */
         background-color: rgb(175, 176, 176);
     }
 
