@@ -5,7 +5,7 @@
   <main>
     <h1>Merci pour votre achat !</h1>
     <p>Votre abonnement a été activé avec succès.</p>
-    <p>Un <span>email</span> vous à été envoyé à l'adresse fournie lors du paiement afin de créer votre mot de passe,</p>
+    <p>Un email vous à été envoyé à l'adresse fournie lors du paiement afin de créer votre mot de passe,</p>
        <p><span>votre identifiant: votre adresse mail</span></p>
        <p>
         <a href="mailto:" id="access-mail">Accéder à vos mails</a>
@@ -38,7 +38,7 @@
       font-weight: bold;
     }
     a {
-    color: #007bff;
+    color: #0f0f10;
     text-decoration: underline;
     cursor: pointer;
   }

@@ -5,9 +5,11 @@
     import UploadForm from '$lib/components/UploadForm.svelte';
     import Price from '$lib/components/Price.svelte';
     import Footer from '../lib/components/Footer.svelte';
+    import Maintenance from '../lib/components/Maintenance.svelte';
 </script>
 <main>
-    <Header />
+    <Maintenance />
+    <!-- <Header />
 <h1>Converter PostgreSQL to MySQL</h1>
 
 <Connect />
@@ -16,9 +18,9 @@
 {/if}
 {#if $user}
 <UploadForm />
-{/if}
+{/if} -->
 </main>
-<Footer />
+<!-- <Footer /> -->
 <style>
     main {
         display: flex;
