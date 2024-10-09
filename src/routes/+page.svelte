@@ -9,7 +9,7 @@
 </script>
 <main>
     <Maintenance />
-    <Header />
+    <!-- <Header />
 <h1>Converter PostgreSQL to MySQL</h1>
 
 <Connect />
@@ -18,9 +18,9 @@
 {/if}
 {#if $user}
 <UploadForm />
-{/if}
+{/if} -->
 </main>
-<Footer />
+<!-- <Footer /> -->
 <style>
     main {
         display: flex;
