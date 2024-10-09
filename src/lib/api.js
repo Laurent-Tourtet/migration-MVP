@@ -238,7 +238,7 @@ export async function checkRequestLimit(token) {
 
         // Accéder aux valeurs de requests_made et requests_limit
         const currentRequestsMade = user.requests_made || 0; // Nombre de requêtes effectuées
-        const requestsLimit = user.requests_limit || 0; // Limite de requêtes
+        const requestsLimit = user.requests_limit || + 1; // Limite de requêtes
 
         // Vérifiez si l'utilisateur a atteint sa limite de requêtes
         if (requestsLimit > 0 && currentRequestsMade >= requestsLimit) {
