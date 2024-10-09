@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import openai from '../openai/config/openaiConfig';
 import { v4 as uuidv4 } from 'uuid';
+import { checkRequestLimit } from '$lib/api'; // Importer la fonction depuis api.js
 
 // Import des variables d'environnement
 const directusUrl = import.meta.env.VITE_DIRECTUS_URL;
@@ -8,7 +9,6 @@ const openaiUrl = import.meta.env.VITE_OPENAI_API_URL;
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
 console.log('URL OpenAI :', openaiUrl);
-
 
 // Fonction utilitaire pour détecter le dialecte
 function detectDialect(fileContent) {
@@ -36,12 +36,7 @@ async function convertToMySQL(fileContent, dialect) {
                         {
                             role: "system",
                             content:  `
-Tu es un expert en base de données, ta tâche est de convertir des requêtes PostgreSQL en MySQL en prenant en compte les spécificités suivantes :
-1. Remplacer le type SERIAL par INT AUTO_INCREMENT.
-2. Les triggers doivent être écrits avec la syntaxe MySQL, en utilisant BEGIN ... END; et en mettant à jour les stocks dans la table 'products' après l'insertion d'items.
-3. Les fonctions PL/pgSQL doivent être converties en procédures MySQL et utiliser la clause DELIMITER.
-4. Remplacer la fonction ILIKE par LIKE en utilisant CONCAT.
-5. Si une séquence ou fonction PostgreSQL n'est pas supportée dans MySQL, proposer une alternative via des requêtes séparées ou une logique au niveau de l'application.
+Tu es un expert en base de données, ta tâche est de convertir des requêtes PostgreSQL en MySQL...
 `
                         },
                         {
@@ -102,7 +97,7 @@ async function uploadToDirectus(fileName, content, token) {
 // Fonction pour gérer la requête POST
 export async function POST({ request }) {
     try {
-        const { fileContent } = await request.json();
+        const { fileContent, userId } = await request.json();  // Inclure userId pour identifier l'utilisateur
         const authHeader = request.headers.get('Authorization');
 
         if (!authHeader) {
@@ -110,6 +105,9 @@ export async function POST({ request }) {
         }
 
         const token = authHeader.split(' ')[1];  // Extrait le token après "Bearer "
+
+        // **Vérifier la limite de requêtes**
+        await checkRequestLimit(userId);  // Vérifie et met à jour la limite de requêtes de l'utilisateur
 
         // Détection du dialecte
         const detectedDialect = detectDialect(fileContent);

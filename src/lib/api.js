@@ -225,7 +225,7 @@ export async function checkRequestLimit(userId) {
         if (user.requests_limit > 0 && user.requests_made >= user.requests_limit) {
             throw new Error('Vous avez atteint la limite de requêtes pour votre abonnement.');
         }
-        
+        console.log('user.requests_made', user.requests_made);
         // Incrémenter le compteur de requêtes
         user.requests_made += 1;
         
