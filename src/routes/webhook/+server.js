@@ -23,17 +23,16 @@ export async function POST({ request }) {
 
     // Gérer l'événement ici
     switch (event.type) {
-        case 'invoice.payment_succeeded':
+        case 'invoice.payment_succeeded': {
             const invoice = event.data.object;
-            // Gère la réussite du paiement
             console.log('Payment succeeded:', invoice);
             break;
+        }
 
         case 'checkout.session.completed': {
             const session = event.data.object;
             const email = session.customer_details.email; // Utiliser customer_details pour récupérer l'email
             const subscriptionId = session.subscription;
-            const subscriptionStatus = 'active';
             const fullName = session.customer_details.name; // Récupérez le nom complet
             const nameParts = fullName.split(' ');
             
@@ -46,16 +45,34 @@ export async function POST({ request }) {
                 firstName = fullName; // Si c'est juste un mot, on l'utilise comme prénom
                 lastName = ''; // Pas de nom de famille
             }
+
+            // Définir la limite de requêtes en fonction du plan choisi
+            let requestsLimit;
+            const planId = session.metadata.plan_id; // Assurez-vous d'envoyer ce metadata lors de la création de la session
             
-            // Créer l'utilisateur dans Directus
+            switch(planId) {
+                case 'price_1PtAGrRpckCWPiEzgF0BzBgi': // Remplace par l'ID réel du plan gratuit dans Stripe
+                    requestsLimit = 1; // Par exemple, 10 requêtes pour le plan gratuit
+                    break;
+                case 'price_1PtAJIRpckCWPiEzE0TiUnwG': // Remplace par l'ID réel du plan standard dans Stripe
+                    requestsLimit = 100; // Par exemple, 100 requêtes pour le plan standard
+                    break;
+                case 'price_1PtAK5RpckCWPiEzIqcCPaU1': // Remplace par l'ID réel du plan unlimited dans Stripe
+                    requestsLimit = 0; // 0 signifie aucune limite
+                    break;
+                default:
+                    requestsLimit = 10; // Par défaut, mettre une limite raisonnable si non spécifié
+            }
+
+            // Créer l'utilisateur dans Directus avec la limite de requêtes
             const userData = {
                 email: email,
                 first_name: firstName,
                 last_name: lastName,
                 subscription_id: subscriptionId,
-                subscription_status: subscriptionStatus,
+                requests_made: 0, // Initialisation à zéro pour le nombre de requêtes utilisées
+                requests_limit: requestsLimit // Limite de requêtes en fonction du plan
             };
-            
 
             try {
                 const newUser = await createUser(userData);

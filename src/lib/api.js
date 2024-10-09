@@ -215,3 +215,28 @@ export async function resetPasswordWithToken(token, password) {
         throw error;
     }
 }
+
+// Nouvelle fonction : Vérification de la limite de requêtes
+export async function checkRequestLimit(userId) {
+    try {
+        const user = await fetchWithAuth(`${import.meta.env.VITE_DIRECTUS_URL}/users/${userId}`);
+        
+        // Si l'utilisateur a une limite de requêtes définie (0 pour unlimited)
+        if (user.requests_limit > 0 && user.requests_made >= user.requests_limit) {
+            throw new Error('Vous avez atteint la limite de requêtes pour votre abonnement.');
+        }
+        
+        // Incrémenter le compteur de requêtes
+        user.requests_made += 1;
+        
+        // Sauvegarder la nouvelle valeur dans Directus
+        await fetchWithAuth(`${import.meta.env.VITE_DIRECTUS_URL}/users/${userId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ requests_made: user.requests_made })
+        });
+        
+    } catch (error) {
+        console.error('Erreur lors de la vérification des limites de requêtes:', error);
+        throw error;
+    }
+}

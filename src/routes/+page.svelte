@@ -12,7 +12,7 @@
     <Header />
 <h1>Converter PostgreSQL to MySQL</h1>
 
-<Connect />
+<!-- <Connect /> -->
 {#if !$user}
 <Price />
 {/if}
