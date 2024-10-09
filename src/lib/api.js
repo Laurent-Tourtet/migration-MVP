@@ -236,8 +236,8 @@ export async function checkRequestLimit(token) {
 
         const user = await response.json();
 
-        // Assurez-vous que requests_made est un nombre valide
-        const currentRequestsMade = user.requests_made || 0;
+        // Accéder à requests_made correctement
+        const currentRequestsMade = user.requests_made || 0; // Correct
         const updatedRequestsMade = currentRequestsMade + 1;
 
         // Mettre à jour le compteur de requêtes dans Directus
@@ -260,3 +260,4 @@ export async function checkRequestLimit(token) {
         throw error; // Propager l'erreur
     }
 }
+
