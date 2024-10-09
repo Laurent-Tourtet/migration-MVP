@@ -4,21 +4,25 @@
     import Connect from '$lib/components/Connect.svelte';
     import UploadForm from '$lib/components/UploadForm.svelte';
     import Price from '$lib/components/Price.svelte';
-    import Footer from '../lib/components/Footer.svelte';
-    import Maintenance from '../lib/components/Maintenance.svelte';
+    import Footer from '$lib/components/Footer.svelte';
+    import Maintenance from '$lib/components/Maintenance.svelte';
+    import { isMaintenanceMode } from '$lib/stores';
+    console.log('Composant Maintenance rendu');
 </script>
 <main>
-    <!-- <Maintenance /> -->
-    <Header />
-<h1>Converter PostgreSQL to MySQL</h1>
-
-<Connect />
-{#if !$user}
-<Price />
-{/if}
-{#if $user}
-<UploadForm />
-{/if}
+    {#if isMaintenanceMode}
+        <Maintenance />
+    {:else}
+        <Header />
+        <h1>Converter PostgreSQL to MySQL</h1>
+        <Connect />
+        {#if !$user}
+            <Price />
+        {/if}
+        {#if $user}
+            <UploadForm />
+        {/if}
+    {/if}
 </main>
 <Footer />
 <style>

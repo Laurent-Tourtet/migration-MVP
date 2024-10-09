@@ -12,3 +12,4 @@ export function setUser(data) {
         location: data.location,
     })
 }
+export const isMaintenanceMode = writable(false);
