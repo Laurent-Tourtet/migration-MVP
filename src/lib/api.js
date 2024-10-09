@@ -239,7 +239,7 @@ export async function checkRequestLimit(token) {
         // Accéder à requests_made correctement
         const currentRequestsMade = user.requests_made || 0; // Correct
         const updatedRequestsMade = currentRequestsMade + 1;
-
+console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
         // Mettre à jour le compteur de requêtes dans Directus
         const updateResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${user.id}`, {
             method: 'PATCH',
