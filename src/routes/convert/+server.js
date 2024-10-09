@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import openai from '../openai/config/openaiConfig';
+import { checkRequestLimit } from '../../lib/api';
 import { v4 as uuidv4 } from 'uuid';
 
 // Import des variables d'environnement
