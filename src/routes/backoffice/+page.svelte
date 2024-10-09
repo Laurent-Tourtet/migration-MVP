@@ -24,4 +24,6 @@
     {#if $isMaintenanceMode}
         <p>Le site est actuellement en mode maintenance.</p>
     {/if}
+
+    <a href="/">Retour à l'accueil</a>
 </main>
