@@ -267,7 +267,7 @@ export async function checkRequestLimit(token) {
             console.error('Erreur lors de la mise à jour des requêtes:', updateErrorText);
             throw new Error('Échec de la mise à jour des requêtes.');
         }
-
+        console.log('Statut de la réponse de mise à jour:', updateResponse.status);
         const updateResponseData = await updateResponse.json(); // Récupérer la réponse
         console.log('Réponse de la mise à jour Directus:', updateResponseData); // Log de la réponse
 
