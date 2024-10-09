@@ -5,6 +5,7 @@
   <main>
     <h1>Paiement annulé</h1>
     <p>Votre abonnement n'a pas été activé.</p>
+    <a href="/">Retour à l'accueil</a>
   </main>
   <style>
     main {
@@ -25,6 +26,15 @@
     p {
       font-size: 1.2rem;
       margin-bottom: 1rem;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
     }
   </style>
   
