@@ -217,17 +217,16 @@ export async function resetPasswordWithToken(token, password) {
 }
 
 // Nouvelle fonction : Vérification de la limite de requêtes
+// Exemple de code dans checkRequestLimit
 export async function checkRequestLimit(token) {
     try {
-        // Récupérer les données de l'utilisateur à partir de Directus
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}` // Utiliser le token pour l'authentification
+                'Authorization': `Bearer ${token}`
             }
         });
 
-        // Vérifier si la réponse est correcte
         if (!response.ok) {
             const errorText = await response.text();
             console.error('Erreur lors de la récupération des données de l\'utilisateur:', errorText);
@@ -236,15 +235,16 @@ export async function checkRequestLimit(token) {
 
         const user = await response.json();
 
-        // Vérification de la limite de requêtes
-        if (user.requests_limit > 0 && user.requests_made >= user.requests_limit) {
+        // Assurez-vous que requests_made est un nombre
+        const currentRequestsMade = user.requests_made || 0; // Si requests_made est undefined, initialiser à 0
+
+        if (user.requests_limit > 0 && currentRequestsMade >= user.requests_limit) {
             throw new Error('Vous avez atteint la limite de requêtes pour votre abonnement.');
         }
 
         // Incrémenter le compteur de requêtes
-        const updatedRequestsMade = user.requests_made + 1;
+        const updatedRequestsMade = currentRequestsMade + 1;
 
-        // Mettre à jour l'utilisateur dans Directus
         await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${user.id}`, {
             method: 'PATCH',
             headers: {
@@ -255,9 +255,8 @@ export async function checkRequestLimit(token) {
         });
 
         console.log('Compteur de requêtes mis à jour avec succès:', updatedRequestsMade);
-
     } catch (error) {
         console.error('Erreur lors de la vérification des limites de requêtes:', error);
-        throw error; // Propager l'erreur
+        throw error;
     }
 }
