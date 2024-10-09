@@ -8,8 +8,8 @@
     import Maintenance from '../lib/components/Maintenance.svelte';
 </script>
 <main>
-    <Maintenance />
-    <!-- <Header />
+    <!-- <Maintenance /> -->
+    <Header />
 <h1>Converter PostgreSQL to MySQL</h1>
 
 <Connect />
@@ -18,9 +18,9 @@
 {/if}
 {#if $user}
 <UploadForm />
-{/if} -->
+{/if}
 </main>
-<!-- <Footer /> -->
+<Footer />
 <style>
     main {
         display: flex;

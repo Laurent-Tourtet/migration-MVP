@@ -22,7 +22,7 @@
             </a>
           </div>
 
-        <p>&copy; {year} SQL Converter. Tous droits réservés.</p>
+        <p>&copy; {year} Yautedev. Tous droits réservés.</p>
     </div>
 </footer>
 

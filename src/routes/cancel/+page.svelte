@@ -6,4 +6,25 @@
     <h1>Paiement annulé</h1>
     <p>Votre abonnement n'a pas été activé.</p>
   </main>
+  <style>
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #007bff;
+     text-shadow: 2px 2px 4px #000000;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+  </style>
   
