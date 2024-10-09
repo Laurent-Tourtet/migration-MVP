@@ -8,11 +8,33 @@
     import Maintenance from '$lib/components/Maintenance.svelte';
     import { isMaintenanceMode } from '$lib/stores';
     console.log('Composant Maintenance rendu');
+
+      // Fonction pour basculer le mode maintenance
+      function toggleMaintenance() {
+        isMaintenanceMode.update(current => {
+            console.log("Ancien mode maintenance :", current);  // Debug
+            const newMode = !current;
+            console.log("Nouveau mode maintenance :", newMode);  // Debug
+            return newMode;
+        });
+    }
 </script>
 <main>
-    {#if isMaintenanceMode}
+    <button on:click={toggleMaintenance}>
+        {#if $isMaintenanceMode}
+            Désactiver la maintenance
+        {:else}
+            Activer la maintenance
+        {/if}
+    </button>
+
+    <!-- Afficher Maintenance si le mode maintenance est activé -->
+    {#if $isMaintenanceMode}
         <Maintenance />
-    {:else}
+    {/if}
+
+    <!-- Afficher le contenu normal si le mode maintenance est désactivé -->
+    {#if !$isMaintenanceMode}
         <Header />
         <h1>Converter PostgreSQL to MySQL</h1>
         <Connect />

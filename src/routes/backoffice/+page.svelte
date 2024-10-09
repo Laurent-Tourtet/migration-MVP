@@ -1,20 +1,27 @@
 <script>
-    import { isMaintenanceMode } from '$lib/stores'; // Assurez-vous d'importer le store ici
+    import { isMaintenanceMode } from '$lib/stores';
 
+    // Fonction pour basculer le mode maintenance
     function toggleMaintenance() {
-        // Mettez à jour l'état du mode maintenance
         isMaintenanceMode.update(current => {
-            const newValue = !current; // Inverser la valeur actuelle
-            console.log('Nouveau mode maintenance :', newValue); // Log de la nouvelle valeur
-            return newValue; // Retourner la nouvelle valeur pour mettre à jour le store
+            console.log("Ancien mode maintenance :", current);  // Debug
+            const newMode = !current;
+            console.log("Nouveau mode maintenance :", newMode);  // Debug
+            return newMode;
         });
     }
 </script>
 
-<button on:click={toggleMaintenance}>
+<main>
+    <button on:click={toggleMaintenance}>
+        {#if $isMaintenanceMode}
+            Désactiver le mode maintenance
+        {:else}
+            Activer le mode maintenance
+        {/if}
+    </button>
+
     {#if $isMaintenanceMode}
-        Désactiver le mode maintenance
-    {:else}
-        Activer le mode maintenance
+        <p>Le site est actuellement en mode maintenance.</p>
     {/if}
-</button>
+</main>
