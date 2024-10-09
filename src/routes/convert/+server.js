@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import openai from '../openai/config/openaiConfig';
 import { v4 as uuidv4 } from 'uuid';
-import { checkRequestLimit } from '$lib/api'; // Importer la fonction depuis api.js
 
 // Import des variables d'environnement
 const directusUrl = import.meta.env.VITE_DIRECTUS_URL;
@@ -9,6 +8,7 @@ const openaiUrl = import.meta.env.VITE_OPENAI_API_URL;
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
 console.log('URL OpenAI :', openaiUrl);
+
 
 // Fonction utilitaire pour détecter le dialecte
 function detectDialect(fileContent) {
@@ -102,7 +102,7 @@ async function uploadToDirectus(fileName, content, token) {
 // Fonction pour gérer la requête POST
 export async function POST({ request }) {
     try {
-        const { fileContent } = await request.json();  // Ne pas inclure userId
+        const { fileContent } = await request.json();
         const authHeader = request.headers.get('Authorization');
 
         if (!authHeader) {
@@ -110,9 +110,6 @@ export async function POST({ request }) {
         }
 
         const token = authHeader.split(' ')[1];  // Extrait le token après "Bearer "
-
-        // **Vérifier la limite de requêtes**
-        await checkRequestLimit(token);  // Vérifie et met à jour la limite de requêtes de l'utilisateur
 
         // Détection du dialecte
         const detectedDialect = detectDialect(fileContent);
