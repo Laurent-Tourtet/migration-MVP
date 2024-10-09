@@ -217,26 +217,47 @@ export async function resetPasswordWithToken(token, password) {
 }
 
 // Nouvelle fonction : Vérification de la limite de requêtes
-export async function checkRequestLimit(userId) {
+export async function checkRequestLimit(token) {
     try {
-        const user = await fetchWithAuth(`${import.meta.env.VITE_DIRECTUS_URL}/users/${userId}`);
-        console.log('user:", user')
-        // Si l'utilisateur a une limite de requêtes définie (0 pour unlimited)
+        // Récupérer les données de l'utilisateur à partir de Directus
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}` // Utiliser le token pour l'authentification
+            }
+        });
+
+        // Vérifier si la réponse est correcte
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Erreur lors de la récupération des données de l\'utilisateur:', errorText);
+            throw new Error('Échec de la récupération des données de l\'utilisateur.');
+        }
+
+        const user = await response.json();
+
+        // Vérification de la limite de requêtes
         if (user.requests_limit > 0 && user.requests_made >= user.requests_limit) {
             throw new Error('Vous avez atteint la limite de requêtes pour votre abonnement.');
         }
-        console.log('user.requests_made', user.requests_made);
+
         // Incrémenter le compteur de requêtes
-        user.requests_made += 1;
-        
-        // Sauvegarder la nouvelle valeur dans Directus
-        await fetchWithAuth(`${import.meta.env.VITE_DIRECTUS_URL}/users/${userId}`, {
+        const updatedRequestsMade = user.requests_made + 1;
+
+        // Mettre à jour l'utilisateur dans Directus
+        await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${user.id}`, {
             method: 'PATCH',
-            body: JSON.stringify({ requests_made: user.requests_made })
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ requests_made: updatedRequestsMade })
         });
-        
+
+        console.log('Compteur de requêtes mis à jour avec succès:', updatedRequestsMade);
+
     } catch (error) {
         console.error('Erreur lors de la vérification des limites de requêtes:', error);
-        throw error;
+        throw error; // Propager l'erreur
     }
 }
