@@ -236,10 +236,19 @@ export async function checkRequestLimit(token) {
 
         const user = await response.json();
 
-        // Accéder à requests_made correctement
-        const currentRequestsMade = user.requests_made || 0; // Correct
+        // Accéder aux valeurs de requests_made et requests_limit
+        const currentRequestsMade = user.requests_made || 0; // Nombre de requêtes effectuées
+        const requestsLimit = user.requests_limit || 0; // Limite de requêtes
+
+        // Vérifiez si l'utilisateur a atteint sa limite de requêtes
+        if (requestsLimit > 0 && currentRequestsMade >= requestsLimit) {
+            throw new Error('Vous avez atteint la limite de requêtes pour votre abonnement.');
+        }
+
+        // Incrémenter le compteur de requêtes
         const updatedRequestsMade = currentRequestsMade + 1;
-console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
+        console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
+
         // Mettre à jour le compteur de requêtes dans Directus
         const updateResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
             method: 'PATCH',
@@ -248,9 +257,16 @@ console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                requests_made: updatedRequestsMade
+                requests_made: updatedRequestsMade // Mise à jour de requests_made
             })
         });
+
+        // Vérification de la réponse de la mise à jour
+        if (!updateResponse.ok) {
+            const updateErrorText = await updateResponse.text();
+            console.error('Erreur lors de la mise à jour des requêtes:', updateErrorText);
+            throw new Error('Échec de la mise à jour des requêtes.');
+        }
 
         const updateResponseData = await updateResponse.json(); // Récupérer la réponse
         console.log('Réponse de la mise à jour Directus:', updateResponseData); // Log de la réponse
@@ -260,4 +276,5 @@ console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
         throw error; // Propager l'erreur
     }
 }
+
 
