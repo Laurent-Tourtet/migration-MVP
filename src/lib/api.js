@@ -245,7 +245,7 @@ export async function checkRequestLimit(token) {
         // Incrémenter le compteur de requêtes
         const updatedRequestsMade = currentRequestsMade + 1;
 
-        await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${user.id}`, {
+        const updateResponse=await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${user.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -253,6 +253,9 @@ export async function checkRequestLimit(token) {
             },
             body: JSON.stringify({ requests_made: updatedRequestsMade })
         });
+
+        const updateResponseData = await updateResponse.json(); // Récupérer la réponse
+console.log('Réponse de la mise à jour Directus:', updateResponseData); // Log de la réponse
 
         console.log('Compteur de requêtes mis à jour avec succès:', updatedRequestsMade);
     } catch (error) {
