@@ -236,7 +236,7 @@ export async function checkRequestLimit(token) {
 
         const user = await response.json();
 
-        // Accéder aux valeurs de requests_made et requests_limit
+        // Accéder à requests_made et requests_limit
         const currentRequestsMade = user.requests_made || 0; // Nombre de requêtes effectuées
         const requestsLimit = user.requests_limit || 0; // Limite de requêtes
 
@@ -250,28 +250,27 @@ export async function checkRequestLimit(token) {
         console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
 
         // Mettre à jour le compteur de requêtes dans Directus
-const updateResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
-    method: 'PATCH',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Assurez-vous que le token est valide
-    },
-    body: JSON.stringify({
-        requests_made: updatedRequestsMade // Mise à jour de requests_made
-    })
-});
+        const updateResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                requests_made: updatedRequestsMade // Utiliser la nouvelle valeur cumulée
+            })
+        });
 
-// Vérification de la réponse de la mise à jour
-if (!updateResponse.ok) {
-    const updateErrorText = await updateResponse.text(); // Récupérer le texte d'erreur
-    console.error('Erreur lors de la mise à jour des requêtes:', updateErrorText); // Log d'erreur
-    throw new Error(`Échec de la mise à jour des requêtes : ${updateErrorText}`); // Propager l'erreur avec le message d'erreur
-}
+        // Vérification de la réponse de la mise à jour
+        if (!updateResponse.ok) {
+            const updateErrorText = await updateResponse.text();
+            console.error('Erreur lors de la mise à jour des requêtes:', updateErrorText);
+            throw new Error('Échec de la mise à jour des requêtes.');
+        }
 
-console.log('Statut de la réponse de mise à jour:', updateResponse.status); // Log du statut de la réponse
-const updateResponseData = await updateResponse.json(); // Récupérer la réponse JSON
-console.log('Réponse de la mise à jour Directus:', updateResponseData); // Log de la réponse
-
+        console.log('Statut de la réponse de mise à jour:', updateResponse.status);
+        const updateResponseData = await updateResponse.json();
+        console.log('Réponse de la mise à jour Directus:', updateResponseData);
 
     } catch (error) {
         console.error('Erreur lors de la vérification des limites de requêtes:', error);
