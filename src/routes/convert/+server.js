@@ -112,6 +112,7 @@ export async function POST({ request }) {
 
         const token = authHeader.split(' ')[1];  // Extrait le token après "Bearer "
         console.log('Token reçu :', token);
+
         await checkRequestLimit(token); 
         // Détection du dialecte
         const detectedDialect = detectDialect(fileContent);
