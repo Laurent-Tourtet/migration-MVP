@@ -8,7 +8,7 @@
     import Maintenance from '../lib/components/Maintenance.svelte';
 </script>
 <main>
-    <!-- <Maintenance /> -->
+    <Maintenance />
     <!-- <Header />
 <h1>Converter PostgreSQL to MySQL</h1>
 
