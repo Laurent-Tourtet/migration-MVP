@@ -20,13 +20,7 @@
     }
 </script>
 <main>
-    <button on:click={toggleMaintenance}>
-        {#if $isMaintenanceMode}
-            Désactiver la maintenance
-        {:else}
-            Activer la maintenance
-        {/if}
-    </button>
+    
 
     <!-- Afficher Maintenance si le mode maintenance est activé -->
     {#if $isMaintenanceMode}
