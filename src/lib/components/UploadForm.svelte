@@ -29,24 +29,32 @@
       }
 
       // Envoyer le fichier au serveur pour conversion
-      const response = await fetch('/convert', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ fileContent })
-      });
+const response = await fetch('/convert', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ fileContent })
+});
 
-      loading = false; // Arrêter l'animation de chargement
+loading = false; // Arrêter l'animation de chargement
 
-      // Gérer les réponses
-      if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Erreur de conversion côté serveur :', errorText);
-          errorMessage = `Erreur lors de la conversion : ${errorText}`; // Mettre à jour le message d'erreur
-          return; // Sortir de la fonction
-      }
+// Gérer les réponses
+if (!response.ok) {
+    const errorText = await response.text();
+    
+    // Si la réponse est 403 (limite de requêtes atteinte), afficher directement le message sans préfixe
+    if (response.status === 403) {
+        errorMessage = errorText; // Afficher directement le message reçu
+    } else {
+        console.error('Erreur de conversion côté serveur :', errorText);
+        errorMessage = `Erreur lors de la conversion : ${errorText}`; // Mettre à jour le message d'erreur pour d'autres erreurs
+    }
+
+    return; // Sortir de la fonction
+}
+
 
       const data = await response.json();
       console.log('Données de réponse:', data); // Vérifier la structure des données
