@@ -216,8 +216,34 @@ export async function resetPasswordWithToken(token, password) {
     }
 }
 
+// Fonction pour mettre à jour un utilisateur dans Directus via `users/me`
+export async function updateUser(data) {
+    const token = getStoredToken();
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erreur lors de la mise à jour de l'utilisateur : ${errorText}`);
+        }
+
+        const updatedUser = await response.json();
+        return updatedUser;
+    } catch (error) {
+        console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+        throw error;
+    }
+}
+
 // Nouvelle fonction : Vérification de la limite de requêtes
-// api.js
 export async function checkRequestLimit(token) {
     try {
         // Récupérer les données de l'utilisateur
@@ -237,8 +263,8 @@ export async function checkRequestLimit(token) {
         const user = await response.json();
 
         // Accéder à requests_made et requests_limit
-        const currentRequestsMade = user.requests_made || 0; // Nombre de requêtes effectuées
-        const requestsLimit = user.requests_limit || 0; // Limite de requêtes
+        const currentRequestsMade = user.data.requests_made || 0; // Nombre de requêtes effectuées
+        const requestsLimit = user.data.requests_limit || 0; // Limite de requêtes
 
         // Vérifiez si l'utilisateur a atteint sa limite de requêtes
         if (requestsLimit > 0 && currentRequestsMade >= requestsLimit) {
@@ -246,10 +272,10 @@ export async function checkRequestLimit(token) {
         }
 
         // Incrémenter le compteur de requêtes
-        // const updatedRequestsMade = currentRequestsMade + 1;
-        // console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
+        const updatedRequestsMade = currentRequestsMade + 1;
+        console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
 
-        // Mettre à jour le compteur de requêtes dans Directus
+        // Mettre à jour le compteur de requêtes dans Directus via users/me
         const updateResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
             method: 'PATCH',
             headers: {
@@ -257,7 +283,7 @@ export async function checkRequestLimit(token) {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                requests_made: currentRequestsMade + 1 // Utiliser la nouvelle valeur cumulée
+                requests_made: updatedRequestsMade // Utiliser la nouvelle valeur cumulée
             })
         });
 
@@ -277,5 +303,3 @@ export async function checkRequestLimit(token) {
         throw error; // Propager l'erreur
     }
 }
-
-

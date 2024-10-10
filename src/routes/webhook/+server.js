@@ -70,13 +70,19 @@ export async function POST({ request }) {
                 first_name: firstName,
                 last_name: lastName,
                 subscription_id: subscriptionId,
-                // requests_made: 0, 
                 requests_limit: requestsLimit // Limite de requêtes en fonction du plan
             };
 
             try {
+                // On vérifie si l'utilisateur est nouveau avant d'initialiser requests_made
                 const newUser = await createUser(userData);
                 console.log(`Utilisateur créé avec succès : ${newUser.id}`);
+
+                // Seulement lors de la création d'un nouvel utilisateur
+                if (newUser) {
+                    await updateUser(newUser.id, { requests_made: 0 });
+                    console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
+                }
 
                 // Envoyer un email pour réinitialiser le mot de passe
                 await passwordReset(email);
