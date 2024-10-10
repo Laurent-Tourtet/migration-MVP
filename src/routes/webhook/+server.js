@@ -70,7 +70,7 @@ export async function POST({ request }) {
                 first_name: firstName,
                 last_name: lastName,
                 subscription_id: subscriptionId,
-                requests_made: 0, // Initialisation à zéro pour le nombre de requêtes utilisées
+                // requests_made: 0, 
                 requests_limit: requestsLimit // Limite de requêtes en fonction du plan
             };
 
