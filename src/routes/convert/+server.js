@@ -113,7 +113,12 @@ export async function POST({ request }) {
         const token = authHeader.split(' ')[1];  // Extrait le token après "Bearer "
         console.log('Token reçu :', token);
 
-        await checkRequestLimit(token); 
+        const limitCheck = await checkRequestLimit(token); 
+
+        if (!limitCheck.success) {
+            // Si l'utilisateur a atteint sa limite, retourner une réponse appropriée
+            return new Response(JSON.stringify({ message: limitCheck.message }), { status: 403 });  // Statut HTTP 403 : Interdit
+        }
         // Détection du dialecte
         const detectedDialect = detectDialect(fileContent);
 

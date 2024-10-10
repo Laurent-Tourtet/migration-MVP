@@ -301,6 +301,12 @@ export async function checkRequestLimit(token) {
         const updateResponseData = await updateResponse.json();
         console.log('Réponse de la mise à jour Directus:', updateResponseData);
 
+        return {
+            success: true,
+            message: 'Requête autorisée.',
+            data: updateResponseData
+        };
+
     } catch (error) {
         console.error('Erreur lors de la vérification des limites de requêtes:', error);
         throw error; // Propager l'erreur
