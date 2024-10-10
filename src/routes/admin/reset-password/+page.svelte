@@ -1,42 +1,62 @@
 <script>
-    import { page } from '$app/stores';
-    import { resetPasswordWithToken } from '$lib/api';
-    import { goto } from '$app/navigation';
-  
-    let token = '';
-    let newPassword = '';
-    let confirmPassword = '';
-    let message = '';
-  
-    // Extraction du token de l'URL
-    $: token = $page.url.searchParams.get('token');
-    console.log('Token from URL:', token);
-  
-    async function handlePasswordReset() {
-      if (newPassword !== confirmPassword) {
-        message = 'Les mots de passe ne correspondent pas.';
-        return;
-      }
-  
-      try {
-        await resetPasswordWithToken(token, newPassword);
-        message = 'Votre mot de passe a été réinitialisé avec succès.';
-      } catch (error) {
-        message = `Erreur: ${error.message}`;
-      }
-      goto('/login');
+  import { page } from '$app/stores';
+  import { resetPasswordWithToken } from '$lib/api';
+  import { goto } from '$app/navigation';
+
+  let token = '';
+  let newPassword = '';
+  let confirmPassword = '';
+  let message = '';
+
+  // Extraction du token de l'URL
+  $: token = $page.url.searchParams.get('token');
+  console.log('Token from URL:', token);
+
+  function validatePassword(password) {
+    const minLength = 8;
+    const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/; // Vous pouvez ajouter d'autres caractères spéciaux si nécessaire
+
+    if (password.length < minLength) {
+      return 'Le mot de passe doit contenir au moins 8 caractères.';
     }
-  </script>
-  
-  <main>
-    <h1>Réinitialiser le mot de passe</h1>
-    <input type="password" bind:value={newPassword} placeholder="Nouveau mot de passe" required />
-    <input type="password" bind:value={confirmPassword} placeholder="Confirmer le mot de passe" required />
-    <button on:click={handlePasswordReset}>Réinitialiser</button>
-    {#if message}
-      <p>{message}</p>
-    {/if}
-  </main>
+    if (!specialCharPattern.test(password)) {
+      return 'Le mot de passe doit contenir au moins un caractère spécial.';
+    }
+    return null; // Pas d'erreur
+  }
+
+  async function handlePasswordReset() {
+    if (newPassword !== confirmPassword) {
+      message = 'Les mots de passe ne correspondent pas.';
+      return;
+    }
+
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      message = passwordError;
+      return;
+    }
+
+    try {
+      await resetPasswordWithToken(token, newPassword);
+      message = 'Votre mot de passe a été réinitialisé avec succès.';
+    } catch (error) {
+      message = `Erreur: ${error.message}`;
+    }
+    goto('/login');
+  }
+</script>
+
+<main>
+  <h1>Réinitialiser le mot de passe</h1>
+  <input type="password" bind:value={newPassword} placeholder="Nouveau mot de passe" required />
+  <input type="password" bind:value={confirmPassword} placeholder="Confirmer le mot de passe" required />
+  <button on:click={handlePasswordReset}>Réinitialiser</button>
+  {#if message}
+    <p>{message}</p>
+  {/if}
+</main>
+
     
     <style>
       main {
