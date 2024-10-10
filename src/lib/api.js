@@ -268,7 +268,10 @@ export async function checkRequestLimit(token) {
 
         // Vérifiez si l'utilisateur a atteint sa limite de requêtes
         if (requestsLimit > 0 && currentRequestsMade >= requestsLimit) {
-            throw new Error('Vous avez atteint la limite de requêtes pour votre abonnement.');
+            return {
+                success: false,
+                message: 'Vous avez atteint la limite de requêtes pour votre abonnement.'
+            }; // Retourne un objet au lieu de lever une erreur
         }
 
         // Incrémenter le compteur de requêtes
