@@ -1,6 +1,8 @@
 <script>
   import { page } from '$app/stores';
+  
   import { resetPasswordWithToken } from '$lib/api';
+  import  Header from '$lib/components/Header.svelte';
   import { goto } from '$app/navigation';
 
   let token = '';
@@ -46,9 +48,10 @@
     goto('/login');
   }
 </script>
-
+<Header />
 <main>
   <h1>Réinitialiser le mot de passe</h1>
+  <p>* votre mot de passe doit contenir minimum 8 caractères dont un caractère spécial.</p>
   <input type="password" bind:value={newPassword} placeholder="Nouveau mot de passe" required />
   <input type="password" bind:value={confirmPassword} placeholder="Confirmer le mot de passe" required />
   <button on:click={handlePasswordReset}>Réinitialiser</button>
@@ -90,7 +93,7 @@
         background-color: #3bd1e1;
         color: #063b69;
         border: 1px solid #fbf9f9;
-        margin-right: 10px;
+        margin: 10px 0;
         padding: 10px 20px;
         border-radius: 8px;
         cursor: pointer;
@@ -103,8 +106,9 @@
       }
     
       p {
-        color: white;
-        margin-top: 20px;
+        color: rgb(239, 13, 13);
+        text-shadow:  0 0 10px #333;
+        /* margin-top: 10px; */
       }
     </style>
     
