@@ -15,7 +15,7 @@ import { user } from '$lib/stores';
         </a>
       {/if}
       {#if $user}
-        <a href="/profile">
+        <a href="/admin/profile">
           <i class="fas fa-user"></i>
           <p>Profile</p>
         </a>
