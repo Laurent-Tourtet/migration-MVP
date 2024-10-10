@@ -4,25 +4,29 @@ import { user } from '$lib/stores';
 
 <main>
     <nav>
-        <a href="/">
-          <i class="fas fa-home"></i>
-          <p>Home</p>
+      <a href="/">
+        <i class="fas fa-home"></i>
+        <p>Home</p>
+      </a>
+      {#if !$user}
+        <a href="/login">
+          <i class="fas fa-sign-in-alt"></i>
+          <p>Login</p>
         </a>
-        {#if !$user}
-          <a href="/login">
-            <i class="fas fa-sign-in-alt"></i>
-            <p>Login</p>
-          </a>
-        {/if}
-        {#if $user}
-          <a href="/logout" on:click={(e) => { 
-            e.preventDefault(); 
-            user.set(null); 
-          }}>
-            <i class="fas fa-sign-out-alt"></i>
-            <p>Logout</p>
-          </a>
-        {/if}
+      {/if}
+      {#if $user}
+        <a href="/profile">
+          <i class="fas fa-user"></i>
+          <p>Profile</p>
+        </a>
+        <a href="/logout" on:click={(e) => { 
+          e.preventDefault(); 
+          user.set(null); 
+        }}>
+          <i class="fas fa-sign-out-alt"></i>
+          <p>Logout</p>
+        </a>
+      {/if}
          <a href="/doc">
             <i class="fas fa-book"></i>
             <p>Doc</p>
