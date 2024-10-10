@@ -51,7 +51,7 @@ export async function POST({ request }) {
             const planId = session.metadata.plan_id; // Assurez-vous d'envoyer ce metadata lors de la création de la session
             
             switch(planId) {
-                case 'price_1PtAGrRpckCWPiEzgF0BzBgi': // Remplace par l'ID réel du plan gratuit dans Stripe
+                case 'price_1Q8IPgRpckCWPiEzgdloGCX9': // Remplace par l'ID réel du plan gratuit dans Stripe
                     requestsLimit = 1; // Par exemple, 10 requêtes pour le plan gratuit
                     break;
                 case 'price_1PtAJIRpckCWPiEzE0TiUnwG': // Remplace par l'ID réel du plan standard dans Stripe
