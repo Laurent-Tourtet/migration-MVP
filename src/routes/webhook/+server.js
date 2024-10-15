@@ -54,10 +54,10 @@ export async function POST({ request }) {
                 case 'price_1QA4zWRpckCWPiEzX2HaQBG8': // Remplace par l'ID réel du plan gratuit dans Stripe
                     requestsLimit = 1; // Par exemple, 10 requêtes pour le plan gratuit
                     break;
-                case 'price_1PtAJIRpckCWPiEzE0TiUnwG': // Remplace par l'ID réel du plan standard dans Stripe
+                case 'price_1QA5HwRpckCWPiEzO9tkixKs': // Remplace par l'ID réel du plan standard dans Stripe
                     requestsLimit = 100; // Par exemple, 100 requêtes pour le plan standard
                     break;
-                case 'price_1PtAK5RpckCWPiEzIqcCPaU1': // Remplace par l'ID réel du plan unlimited dans Stripe
+                case 'price_1QA5I2RpckCWPiEzVL9sUTUp': // Remplace par l'ID réel du plan unlimited dans Stripe
                     requestsLimit = 0; // 0 signifie aucune limite
                     break;
                 default:

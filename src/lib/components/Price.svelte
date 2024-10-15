@@ -52,7 +52,7 @@
     <p><strong>100</strong> requêtes par mois</p><br>
     <p>Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p>
     <p class="price">19,99 €/mois</p>
-    <button class="subscribe-btn" on:click={() => subscribe('price_1PtAJIRpckCWPiEzE0TiUnwG')}>Souscrire</button>
+    <button class="subscribe-btn" on:click={() => subscribe('price_1QA5HwRpckCWPiEzO9tkixKs')}>Souscrire</button>
   </div>
 
   <div class="pricing-card">
@@ -60,7 +60,7 @@
     <p><strong>Requêtes illimitées</strong></p><br>
     Pour les entreprises ou les développeurs ayant des besoins intensifs et réguliers
     <p class="price">69,99 €/mois</p>
-    <button class="subscribe-btn" on:click={() => subscribe('price_1PtAK5RpckCWPiEzIqcCPaU1')}>Souscrire</button>
+    <button class="subscribe-btn" on:click={() => subscribe('price_1QA5I2RpckCWPiEzVL9sUTUp')}>Souscrire</button>
   </div>
 </main>
 {/if}
