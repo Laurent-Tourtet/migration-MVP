@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { json } from '@sveltejs/kit';
-import { createUser, passwordReset } from "$lib/api"; // Assurez-vous que ces fonctions existent
+import { createUser, passwordReset, updateUser } from "$lib/api"; // Assurez-vous que ces fonctions existent
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Assurez-vous que la variable d'environnement est définie
 

@@ -24,6 +24,10 @@
     });
 
     const { sessionId } = await response.json();
+    if (error) {
+        console.error('Erreur lors de la création de la session Stripe :', error);
+        return;
+      }
 
     if (sessionId) {
       // Redirection vers Stripe avec la méthode recommandée

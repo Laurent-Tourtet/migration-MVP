@@ -3,6 +3,9 @@ const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY); // Remplacez par 
 
 export async function POST({ request }) {
   const { planId, userId } = await request.json(); // Ajoute userId si tu veux l'utiliser
+  if (!planId || !userId) {
+    return new Response(JSON.stringify({ error: 'PlanId et UserId sont requis' }), { status: 400 });
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
