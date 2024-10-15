@@ -1,0 +1,57 @@
+<script>
+    import Header from '$lib/components/Header.svelte';
+
+</script>
+<Header />
+<main>
+    <aside class="left-menu">
+        <a href="/admin/profile">Profile</a>
+        <a href="/new-password">Reset Password</a>
+    </aside>
+<section>
+    <h1>Profile</h1>
+    <p>Welcome to your profile page.</p>
+    <p>Here you can update your personal information.</p>
+    <p>For security reasons, you can't change your email address.</p>
+    <p>If you need to change your email address, please contact support: <a href="mailto:">contact@yautedev.fr</a></p>
+    <p>Thank you for using our service.</p>
+</section>
+</main>
+<style>
+    main {
+        display: flex;
+        justify-content: space-between;
+        margin: 50px;
+    }
+
+    .left-menu {
+        width: 20%;
+        border-radius: 5px;
+        padding: 5px 0;
+        background-color: #063b69;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px #333;
+    }
+
+    .left-menu a {
+        font-size: 1.2rem;
+        padding: 10px;
+        color: #3acdde;
+    }
+
+    section {
+        width: 70%;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f4f4f4;
+        box-shadow: 0 0 10px #333;
+    }
+    h1 {
+        color: #3acdde;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+</style>
