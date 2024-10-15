@@ -4,6 +4,9 @@
   import { loadStripe } from '@stripe/stripe-js';
 
   let stripe;
+  const freePriceId = import.meta.env.VITE_PRICE_FREE;
+const standardPriceId = import.meta.env.VITE_PRICE_STANDARD;
+const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
 
   // Chargement de Stripe avec la clé publique
   (async () => {
@@ -48,7 +51,7 @@
     <p><strong>10</strong> Requêtes gratuites</p><br>
     <p>Essayez notre convertisseur gratuitement pour 10 requêtes.</p>
     <p class="price">Gratuit</p>
-    <button class="subscribe-btn" on:click={() => subscribe('price_1QA4zWRpckCWPiEzX2HaQBG8')}>Souscrire</button>
+    <button class="subscribe-btn" on:click={() => subscribe(freePriceId)}>Souscrire</button>
   </div>
 
   <div class="pricing-card">
@@ -56,7 +59,7 @@
     <p><strong>100</strong> requêtes par mois</p><br>
     <p>Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p>
     <p class="price">19,99 €/mois</p>
-    <button class="subscribe-btn" on:click={() => subscribe('price_1QA5HwRpckCWPiEzO9tkixKs')}>Souscrire</button>
+    <button class="subscribe-btn" on:click={() => subscribe(standardPriceId)}>Souscrire</button>
   </div>
 
   <div class="pricing-card">
@@ -64,7 +67,7 @@
     <p><strong>Requêtes illimitées</strong></p><br>
     Pour les entreprises ou les développeurs ayant des besoins intensifs et réguliers
     <p class="price">69,99 €/mois</p>
-    <button class="subscribe-btn" on:click={() => subscribe('price_1QA5I2RpckCWPiEzVL9sUTUp')}>Souscrire</button>
+    <button class="subscribe-btn" on:click={() => subscribe(unlimitedPriceId)}>Souscrire</button>
   </div>
 </main>
 {/if}

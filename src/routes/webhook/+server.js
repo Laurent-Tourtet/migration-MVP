@@ -3,6 +3,9 @@ import { json } from '@sveltejs/kit';
 import { createUser, passwordReset, updateUser } from "$lib/api"; // Assurez-vous que ces fonctions existent
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Assurez-vous que la variable d'environnement est définie
+const freePriceId = process.env.PRICE_FREE;
+const standardPriceId = process.env.PRICE_STANDARD;
+const unlimitedPriceId = process.env.PRICE_UNLIMITED;
 
 export async function POST({ request }) {
     const sig = request.headers.get('stripe-signature');
@@ -51,13 +54,13 @@ export async function POST({ request }) {
             const planId = session.metadata.plan_id; // Assurez-vous d'envoyer ce metadata lors de la création de la session
             
             switch(planId) {
-                case 'price_1QA4zWRpckCWPiEzX2HaQBG8': // Remplace par l'ID réel du plan gratuit dans Stripe
+                case freePriceId: // Remplace par l'ID réel du plan gratuit dans Stripe
                     requestsLimit = 1; // Par exemple, 10 requêtes pour le plan gratuit
                     break;
-                case 'price_1QA5HwRpckCWPiEzO9tkixKs': // Remplace par l'ID réel du plan standard dans Stripe
+                case standardPriceId: // Remplace par l'ID réel du plan standard dans Stripe
                     requestsLimit = 100; // Par exemple, 100 requêtes pour le plan standard
                     break;
-                case 'price_1QA5I2RpckCWPiEzVL9sUTUp': // Remplace par l'ID réel du plan unlimited dans Stripe
+                case unlimitedPriceId: // Remplace par l'ID réel du plan unlimited dans Stripe
                     requestsLimit = 0; // 0 signifie aucune limite
                     break;
                 default:
