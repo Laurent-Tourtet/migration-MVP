@@ -18,30 +18,36 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
   }
 
   async function subscribe(planId) {
-    const response = await fetch('/checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ planId })
-    });
+    try {
+        const response = await fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ planId })
+        });
 
-    const { sessionId } = await response.json();
-    if (error) {
+        // Vérifiez si la réponse est réussie
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status} ${response.statusText}`);
+        }
+
+        const { sessionId } = await response.json();
+
+        if (sessionId) {
+            // Redirection vers Stripe avec la méthode recommandée
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) {
+                console.error('Erreur lors de la redirection vers Stripe :', error);
+            }
+        } else {
+            console.error('Erreur lors de la création de la session Stripe');
+        }
+    } catch (error) {
         console.error('Erreur lors de la création de la session Stripe :', error);
-        return;
-      }
-
-    if (sessionId) {
-      // Redirection vers Stripe avec la méthode recommandée
-      const { error } = await stripe.redirectToCheckout({ sessionId });
-      if (error) {
-        console.error('Erreur lors de la redirection vers Stripe :', error);
-      }
-    } else {
-      console.error('Erreur lors de la création de la session Stripe');
     }
-  }
+}
+
 </script>
 
 {#if !$user}
