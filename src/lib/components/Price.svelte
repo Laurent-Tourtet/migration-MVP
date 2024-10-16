@@ -26,6 +26,8 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
             },
             body: JSON.stringify({ planId })
         });
+         // Log de la réponse HTTP
+      console.log('Réponse:', response);
 
         // Vérifiez si la réponse est réussie
         if (!response.ok) {
