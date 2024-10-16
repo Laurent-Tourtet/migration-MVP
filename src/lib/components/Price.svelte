@@ -37,7 +37,7 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
         const { sessionId } = await response.json();
 
         if (sessionId) {
-          // const stripe = stripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+          
 
             // Redirection vers Stripe avec la méthode recommandée
             const { error } = await stripe.redirectToCheckout({ sessionId });
