@@ -88,8 +88,8 @@ export async function POST({ request }) {
                 }
 
                 // Envoyer un email pour réinitialiser le mot de passe
-                await passwordReset(email);
-                console.log(`Email de réinitialisation envoyé à : ${email}`);
+                await passwordReset(newUser.email);
+                console.log(`Email de réinitialisation envoyé à : ${newUser.email}`);
 
             } catch (error) {
                 console.error('Erreur lors de la création de l\'utilisateur:', error);
