@@ -75,7 +75,7 @@ export async function POST({ request }) {
                 subscription_id: subscriptionId,
                 requests_limit: requestsLimit // Limite de requêtes en fonction du plan
             };
-
+                console.log(userData);
             try {
                 const newUser = await createUser(userData);
                 console.log(`Utilisateur créé avec succès : ${newUser.id}`);
