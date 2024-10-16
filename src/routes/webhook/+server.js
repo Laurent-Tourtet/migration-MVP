@@ -38,7 +38,7 @@ export async function POST({ request }) {
             const subscriptionId = session.subscription;
             const fullName = session.customer_details.name; // Récupérez le nom complet
             const nameParts = fullName.split(' ');
-            
+            console.log('Stripe checkout session completed event received');
             // Assurez-vous d'avoir au moins un prénom et un nom
             let firstName, lastName;
             if (nameParts.length > 1) {
