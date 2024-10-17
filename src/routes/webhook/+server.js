@@ -34,72 +34,65 @@ export async function POST({ request }) {
 
         case 'checkout.session.completed': {
             const session = event.data.object;
-            const email = session.customer_details.email; // Utiliser customer_details pour récupérer l'email
+            const email = session.customer_details.email; 
             const subscriptionId = session.subscription;
-            const fullName = session.customer_details.name; // Récupérez le nom complet
+            const fullName = session.customer_details.name; 
             const nameParts = fullName.split(' ');
-            console.log('Stripe checkout session completed event received');
-            // Assurez-vous d'avoir au moins un prénom et un nom
+        
             let firstName, lastName;
             if (nameParts.length > 1) {
-                firstName = nameParts.slice(0, -1).join(' '); // Prénom : tout sauf le dernier mot
-                lastName = nameParts[nameParts.length - 1]; // Nom : dernier mot
+                firstName = nameParts.slice(0, -1).join(' '); 
+                lastName = nameParts[nameParts.length - 1]; 
             } else {
-                firstName = fullName; // Si c'est juste un mot, on l'utilise comme prénom
-                lastName = ''; // Pas de nom de famille
+                firstName = fullName; 
+                lastName = ''; 
             }
-
+        
             // Définir la limite de requêtes en fonction du plan choisi
             let requestsLimit;
-            const planId = session.metadata.plan_id; // Assurez-vous d'envoyer ce metadata lors de la création de la session
-            
+            const planId = session.metadata.plan_id;
+        
             switch(planId) {
-                case freePriceId: // Remplace par l'ID réel du plan gratuit dans Stripe
-                    requestsLimit = 1; // Par exemple, 10 requêtes pour le plan gratuit
+                case freePriceId:
+                    requestsLimit = 1;
                     break;
-                case standardPriceId: // Remplace par l'ID réel du plan standard dans Stripe
-                    requestsLimit = 100; // Par exemple, 100 requêtes pour le plan standard
+                case standardPriceId:
+                    requestsLimit = 100;
                     break;
-                case unlimitedPriceId: // Remplace par l'ID réel du plan unlimited dans Stripe
-                    requestsLimit = 0; // 0 signifie aucune limite
+                case unlimitedPriceId:
+                    requestsLimit = 0;
                     break;
                 default:
-                    requestsLimit = 10; // Par défaut, mettre une limite raisonnable si non spécifié
+                    requestsLimit = 10;
             }
-
-            // Créer l'utilisateur dans Directus avec la limite de requêtes
+        
             const userData = {
                 email: email,
                 first_name: firstName,
                 last_name: lastName,
                 subscription_id: subscriptionId,
-                requests_limit: requestsLimit // Limite de requêtes en fonction du plan
+                requests_limit: requestsLimit 
             };
-                console.log(userData);
+        
             try {
                 console.log("Appel à la fonction createUser...");
                 const newUser = await createUser(userData);
                 console.log(`Utilisateur créé avec succès : ${newUser.id}`);
-            
+        
                 if (newUser) {
                     await updateUser(newUser.id, { requests_made: 0 });
                     console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
-            
-                    // Log avant d'envoyer l'email
+        
                     console.log(`Tentative d'envoi d'un e-mail de réinitialisation à : ${newUser.email}`);
                     const result = await passwordReset(newUser.email);
                     console.log(`Réponse de l'API Directus pour l'email de réinitialisation :`, result);
                     console.log(`Email de réinitialisation envoyé à : ${newUser.email}`);
                 }
             } catch (error) {
-                console.error('Erreur lors de la création de l\'utilisateur:', error);
+                console.error('Erreur lors de la création de l\'utilisateur ou de l\'envoi de l\'email:', error);
             }
-
+        
             break;
         }
-        default:
-            console.warn(`Type d'événement non géré : ${event.type}`);
-    }
-
-    return json({ received: true });
-}
+    } 
+}       
