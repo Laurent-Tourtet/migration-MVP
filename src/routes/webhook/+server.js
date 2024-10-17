@@ -8,6 +8,7 @@ const standardPriceId = process.env.PRICE_STANDARD;
 const unlimitedPriceId = process.env.PRICE_UNLIMITED;
 
 export async function POST({ request }) {
+    console.log("Webhook POST reçu");
   const sig = request.headers.get('stripe-signature');
   const body = await request.text();
 
