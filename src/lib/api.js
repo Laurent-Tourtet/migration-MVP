@@ -231,8 +231,8 @@ export async function updateUser(data) {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erreur lors de la mise à jour de l'utilisateur : ${errorText}`);
+            const errorData = await response.text();
+            throw new Error(`Erreur lors de la mise à jour de l'utilisateur : ${errorData}`);
         }
 
         const updatedUser = await response.json();
