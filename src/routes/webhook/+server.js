@@ -80,7 +80,7 @@ export async function POST({ request }) {
         const newUser = await createUser(userData);
         console.log(`Utilisateur créé avec succès : ${newUser.id || 'undefined'}`);
 
-        if (newUser) {
+        if (newUser && newUser.id) {
           await updateUser(newUser.id, { requests_made: 0 });
           console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
 
