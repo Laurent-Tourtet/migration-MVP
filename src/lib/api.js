@@ -52,12 +52,11 @@ export async function fetchWithAuth(url, options = {}) {
         throw new Error("Aucun token d'authentification trouvé.");
     }
 
-    if (!options.headers) {
-        options.headers = {};
-    }
-
-    options.headers['Authorization'] = `Bearer ${token}`;
-    options.headers['Content-Type'] = 'application/json';
+    options.headers = {
+        ...options.headers,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    };
 
     try {
         let response = await fetch(url, options);
@@ -246,69 +245,22 @@ export async function updateUser(data) {
 // Nouvelle fonction : Vérification de la limite de requêtes
 export async function checkRequestLimit(token) {
     try {
-        // Récupérer les données de l'utilisateur
-        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+        // Récupérer les données de limites depuis le backend
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/request/limit`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Erreur lors de la récupération des données de l\'utilisateur:', errorText);
-            throw new Error('Échec de la récupération des données de l\'utilisateur.');
+            throw new Error('Erreur lors de la vérification de la limite de requêtes.');
         }
 
-        const user = await response.json();
-
-        // Accéder à requests_made et requests_limit
-        const currentRequestsMade = user.data.requests_made || 0; // Nombre de requêtes effectuées
-        const requestsLimit = user.data.requests_limit || 0; // Limite de requêtes
-
-        // Vérifiez si l'utilisateur a atteint sa limite de requêtes
-        if (requestsLimit > 0 && currentRequestsMade >= requestsLimit) {
-            return {
-                success: false,
-                message: 'Vous avez atteint la limite de requêtes pour votre abonnement.'
-            }; // Retourne un objet au lieu de lever une erreur
-        }
-
-        // Incrémenter le compteur de requêtes
-        const updatedRequestsMade = currentRequestsMade + 1;
-        console.log('Nombre de requêtes effectuées:', updatedRequestsMade);
-
-        // Mettre à jour le compteur de requêtes dans Directus via users/me
-        const updateResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                requests_made: updatedRequestsMade // Utiliser la nouvelle valeur cumulée
-            })
-        });
-
-        // Vérification de la réponse de la mise à jour
-        if (!updateResponse.ok) {
-            const updateErrorText = await updateResponse.text();
-            console.error('Erreur lors de la mise à jour des requêtes:', updateErrorText);
-            throw new Error('Échec de la mise à jour des requêtes.');
-        }
-
-        console.log('Statut de la réponse de mise à jour:', updateResponse.status);
-        const updateResponseData = await updateResponse.json();
-        console.log('Réponse de la mise à jour Directus:', updateResponseData);
-
-        return {
-            success: true,
-            message: 'Requête autorisée.',
-            data: updateResponseData
-        };
-
+        return await response.json(); // Retourner les données sur les limites
     } catch (error) {
-        console.error('Erreur lors de la vérification des limites de requêtes:', error);
-        throw error; // Propager l'erreur
+        console.error('Erreur lors de la vérification de la limite de requêtes:', error);
+        throw error;
     }
 }
