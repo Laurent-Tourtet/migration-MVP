@@ -68,7 +68,7 @@ export async function fetchWithAuth(url, options = {}) {
                 token = await refreshToken();  
                 options.headers['Authorization'] = `Bearer ${token}`;
                 response = await fetch(url, options);  
-            } catch (refreshError) {
+            } catch {
                 throw new Error('Échec du rafraîchissement du token et nouvelle tentative échouée.');
             }
         }
