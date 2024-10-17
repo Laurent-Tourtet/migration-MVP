@@ -87,7 +87,8 @@ export async function POST({ request }) {
             
                     // Log avant d'envoyer l'email
                     console.log(`Tentative d'envoi d'un e-mail de réinitialisation à : ${newUser.email}`);
-                    await passwordReset(newUser.email);
+                    const result = await passwordReset(newUser.email);
+                    console.log(`Réponse de l'API Directus pour l'email de réinitialisation :`, result);
                     console.log(`Email de réinitialisation envoyé à : ${newUser.email}`);
                 }
             } catch (error) {
