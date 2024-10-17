@@ -120,16 +120,17 @@ export async function createUser(data) {
             body: JSON.stringify(data)
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Détails de l\'erreur :', errorText); 
-            throw new Error('Échec de la création de l\'utilisateur : ' + errorText); 
+           // Vérifiez si la réponse est réussie
+           if (!response.ok) {
+            const errorData = await response.json(); // Récupérer les erreurs
+            throw new Error(`Erreur lors de la création de l'utilisateur : ${errorData.errors}`);
         }
 
-        return await response.json();
+        const newUser = await response.json(); // Récupérer l'utilisateur créé
+        return newUser; // Retournez l'utilisateur créé
     } catch (error) {
-        console.error('Erreur lors de la création de l\'utilisateur:', error);
-        throw error;
+        console.error('Erreur dans createUser:', error);
+        throw error; // Relancer l'erreur pour la gérer dans le bloc appelant
     }
 }
 

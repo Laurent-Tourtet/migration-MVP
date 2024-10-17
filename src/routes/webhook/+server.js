@@ -78,7 +78,7 @@ export async function POST({ request }) {
       try {
         console.log("Appel à la fonction createUser...");
         const newUser = await createUser(userData);
-        console.log(`Utilisateur créé avec succès : ${newUser.id}`);
+        console.log(`Utilisateur créé avec succès : ${newUser.id || 'undefined'}`);
 
         if (newUser) {
           await updateUser(newUser.id, { requests_made: 0 });
