@@ -101,7 +101,7 @@ Les contributions sont les bienvenues. Veuillez ouvrir une *issue* avant de soum
 
 ## Auteur
 
-- **Ton Nom**
+- **Yautedev ( Laurent Tourtet)**
 - [Ton Email](mailto:contact@yautedev.fr)
 - [Ton Profil LinkedIn](https://www.linkedin.com/in/tourtet-laurent/)
 
