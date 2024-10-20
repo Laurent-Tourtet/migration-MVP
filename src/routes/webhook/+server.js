@@ -78,7 +78,7 @@ console.log("userData", userData);
       try {
         console.log("Appel à la fonction createUser...");
         const newUser = await createUser(userData);
-        console.log(`Utilisateur créé avec succès : ${newUser.id || 'undefined'}`);
+        console.log(`Utilisateur créé avec succès : ${newUser || 'undefined'}`);
 
         if (newUser && newUser.id) {
           await updateUser(newUser.id, { requests_made: 0 });
