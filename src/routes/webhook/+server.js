@@ -74,7 +74,7 @@ export async function POST({ request }) {
         subscription_id: subscriptionId,
         requests_limit: requestsLimit 
       };
-
+console.log("userData", userData);
       try {
         console.log("Appel à la fonction createUser...");
         const newUser = await createUser(userData);
@@ -85,9 +85,9 @@ export async function POST({ request }) {
           console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
 
           console.log(`Tentative d'envoi d'un e-mail de réinitialisation à : ${newUser.email}`);
-          const result = await passwordReset(newUser.email);
+          const result = await passwordReset(email);
           console.log(`Réponse de l'API Directus pour l'email de réinitialisation :`, result);
-          console.log(`Email de réinitialisation envoyé à : ${newUser.email}`);
+          console.log(`Email de réinitialisation envoyé à : ${email}`);
         }
       } catch (error) {
         console.error('Erreur lors de la création de l\'utilisateur ou de l\'envoi de l\'email:', error);

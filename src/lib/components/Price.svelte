@@ -57,21 +57,21 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
 {#if !$user}
 <main class="pricing-container">
 <!-- mode démo -->
-  <div class="pricing-card">
+  <!-- <div class="pricing-card">
     <h2>Demo beta</h2>
     <h2>Connectez vous via les identifiants fourni en mode démo.</h2>
     <p><strong>10</strong> Requêtes gratuites</p><br>
     <p>Essayez notre convertisseur gratuitement pour 10 requêtes.</p>
     <p class="price">Gratuit</p>
     
-  </div>
-  <!-- <div class="pricing-card">
+  </div> -->
+  <div class="pricing-card">
     <h2>Demo</h2>
     <p><strong>10</strong> Requêtes gratuites</p><br>
     <p>Essayez notre convertisseur gratuitement pour 10 requêtes.</p>
     <p class="price">Gratuit</p>
     <button class="subscribe-btn" on:click={() => subscribe(freePriceId)}>Souscrire</button>
-  </div> -->
+  </div>
 
   <!-- <div class="pricing-card">
     <h2>Standard</h2>
