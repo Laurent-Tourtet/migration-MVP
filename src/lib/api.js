@@ -244,7 +244,8 @@ export async function updateUser(data) {
 }
 
 // Nouvelle fonction : Vérification de la limite de requêtes
-export async function checkRequestLimit(token) {
+export async function checkRequestLimit() {
+    const token = getStoredToken();
     try {
         // Récupérer les données de limites depuis le backend
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/request/limit`, {
