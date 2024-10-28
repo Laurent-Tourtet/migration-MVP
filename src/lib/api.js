@@ -1,4 +1,5 @@
 import { authToken, user } from '$lib/stores';
+import { fetch } from 'node-fetch';
 
 // Fonction pour récupérer le token stocké
 export function getStoredToken() {
@@ -228,28 +229,26 @@ export async function resetPasswordWithToken(token, password) {
 }
 
 // Fonction pour mettre à jour un utilisateur dans Directus via `users/me`
-export async function updateUser(data) {
-    const token = getStoredToken();
-
+export async function updateUser(userId, updates) {
     try {
-        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+        const response = await fetch(`https://directus.sqlconverter.fr/users/${userId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${process.env.DIRECTUS_TOKEN}`
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(updates) // Assurez-vous que 'updates' est bien un objet JSON valide
         });
 
-        if (!response.ok) {
-            const errorData = await response.text();
-            throw new Error(`Erreur lors de la mise à jour de l'utilisateur : ${errorData}`);
-        }
+        const data = await response.json();
+        console.log('Réponse de la mise à jour de l\'utilisateur:', data);
 
-        const updatedUser = await response.json();
-        return updatedUser;
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la mise à jour de l'utilisateur : ${JSON.stringify(data)}`);
+        }
+        return data;
     } catch (error) {
-        console.error('Erreur lors de la mise à jour de l\'utilisateur:', error);
+        console.error("Erreur dans updateUser:", error);
         throw error;
     }
 }
