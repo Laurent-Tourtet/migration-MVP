@@ -1,21 +1,19 @@
 import Stripe from 'stripe';
-import { json } from '@sveltejs/kit';
-import { createUser, passwordReset, updateUser } from "$lib/api"; // Assurez-vous que ces fonctions existent
+import { createUser, passwordReset, updateUser } from "$lib/api";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Assurez-vous que la variable d'environnement est définie
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const freePriceId = process.env.PRICE_FREE;
 const standardPriceId = process.env.PRICE_STANDARD;
 const unlimitedPriceId = process.env.PRICE_UNLIMITED;
 
 export async function POST({ request }) {
     console.log("Webhook POST reçu");
-    
+
     const sig = request.headers.get('stripe-signature');
     const body = await request.text();
-
     let event;
+
     try {
-        // Construire l'événement Stripe à partir de la signature et du corps de la requête
         event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
         console.error('Webhook error:', err.message);
@@ -29,32 +27,25 @@ export async function POST({ request }) {
             case 'invoice.payment_succeeded': {
                 const invoice = event.data.object;
                 console.log('Payment succeeded:', invoice);
-                break;
+                return new Response(JSON.stringify({ message: 'Invoice payment succeeded' }), { status: 200 });
             }
 
             case 'checkout.session.completed': {
                 const session = event.data.object;
                 const email = session.customer_details.email;
                 const subscriptionId = session.subscription;
-                const fullName = session.customer_details.name;
+                const fullName = session.customer_details.name || "";
                 const nameParts = fullName.split(' ');
 
-                let firstName, lastName;
-                if (nameParts.length > 1) {
-                    firstName = nameParts.slice(0, -1).join(' ');
-                    lastName = nameParts[nameParts.length - 1];
-                } else {
-                    firstName = fullName;
-                    lastName = '';
-                }
+                const firstName = nameParts.slice(0, -1).join(' ');
+                const lastName = nameParts[nameParts.length - 1] || "";
 
-                // Définir la limite de requêtes en fonction du plan choisi
                 let requestsLimit;
                 const planId = session.metadata.plan_id;
 
                 switch (planId) {
                     case freePriceId:
-                        requestsLimit = 10; // Ajustez cette valeur selon vos besoins
+                        requestsLimit = 10;
                         break;
                     case standardPriceId:
                         requestsLimit = 100;
@@ -77,7 +68,6 @@ export async function POST({ request }) {
 
                 console.log("Appel à la fonction createUser...");
                 
-                // Vérifier si l'utilisateur existe déjà pour éviter la duplication
                 const existingUserResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users?filter[email][_eq]=${userData.email}`);
                 const existingUserData = await existingUserResponse.json();
 
@@ -85,8 +75,7 @@ export async function POST({ request }) {
                     console.log("Utilisateur déjà existant avec cet email.");
                     return new Response(JSON.stringify({ message: "Utilisateur déjà existant" }), { status: 200 });
                 }
-                
-                // Création de l'utilisateur s'il n'existe pas
+
                 const newUser = await createUser(userData);
                 console.log(`Utilisateur créé avec succès : ${newUser?.id}`);
 
@@ -105,7 +94,7 @@ export async function POST({ request }) {
 
             default:
                 console.log(`Webhook non géré: ${event.type}`);
-                return new Response(JSON.stringify({ message: "Webhook non géré" }), { status: 200 });
+                return new Response(JSON.stringify({ message: `Unhandled event type: ${event.type}` }), { status: 200 });
         }
     } catch (error) {
         console.error("Erreur lors du traitement du webhook :", error);
