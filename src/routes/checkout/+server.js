@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.VITE_STRIPE_SECRET_KEY); // Remplacez par votre clé secrète
 
 export async function POST({ request }) {
+  console.log("Webhook POST reçu");
   const { planId, userId } = await request.json(); // Ajoute userId si tu veux l'utiliser
 
   try {
