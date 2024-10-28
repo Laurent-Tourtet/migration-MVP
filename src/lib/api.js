@@ -1,5 +1,5 @@
 import { authToken, user } from '$lib/stores';
-import { fetch } from 'node-fetch';
+
 
 // Fonction pour récupérer le token stocké
 export function getStoredToken() {
