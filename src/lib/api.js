@@ -108,31 +108,42 @@ export async function login(email, password) {
     return data;
 }
 
-// Fonction de création d'un utilisateur
+
+// Fonction de création d'utilisateur avec vérification d'existence
 export async function createUser(data) {
-    console.log('Données envoyées :', data); 
+    console.log('Données envoyées :', data);
     try {
+        // Vérifie si l'utilisateur existe déjà pour éviter la duplication
+        const existingUserResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users?filter[email][_eq]=${data.email}`);
+        const existingUserData = await existingUserResponse.json();
+
+        if (existingUserData && existingUserData.data && existingUserData.data.length > 0) {
+            console.log("Utilisateur déjà existant avec cet email.");
+            return existingUserData.data[0]; // retourne l'utilisateur existant pour éviter la duplication
+        }
+
+        // Création de l'utilisateur s'il n'existe pas
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            },  
+            },
             body: JSON.stringify(data)
         });
 
-           // Vérifiez si la réponse est réussie
-           if (!response.ok) {
-            const errorData = await response.json(); // Récupérer les erreurs
-            throw new Error(`Erreur lors de la création de l'utilisateur : ${errorData.errors}`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Détails de l\'erreur :', errorText);
+            throw new Error('Échec de la création de l\'utilisateur : ' + errorText);
         }
 
-        const newUser = await response.json(); // Récupérer l'utilisateur créé
-        return newUser; // Retournez l'utilisateur créé
+        return await response.json();
     } catch (error) {
-        console.error('Erreur dans createUser:', error);
-        throw error; // Relancer l'erreur pour la gérer dans le bloc appelant
+        console.error('Erreur lors de la création de l\'utilisateur:', error);
+        throw error;
     }
 }
+
 
 // Fonction de déconnexion
 export function logout() {
