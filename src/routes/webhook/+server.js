@@ -81,13 +81,15 @@ console.log("userData", userData);
         console.log(`Utilisateur créé avec succès : ${userData || 'undefined'}`);
 
         if (userData && userData.id) {
-          await updateUser(userData.id, { requests_made: 0 });
-          console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
-
           console.log(`Tentative d'envoi d'un e-mail de réinitialisation à : ${userData.email}`);
           const result = await passwordReset(userData.email);
           console.log(`Réponse de l'API Directus pour l'email de réinitialisation :`, result);
           console.log(`Email de réinitialisation envoyé à : ${userData.email}`);
+
+          await updateUser(userData.id, { requests_made: 0 });
+          console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
+
+          
         }
       } catch (error) {
         console.error('Erreur lors de la création de l\'utilisateur ou de l\'envoi de l\'email:', error);
