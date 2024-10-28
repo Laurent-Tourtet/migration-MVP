@@ -16,18 +16,18 @@ export async function POST({ request }) {
     try {
         event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
-        console.error('Webhook error:', err.message);
-        return new Response(JSON.stringify({ error: 'Webhook error: ' + err.message }), { status: 400 });
+        console.error('Erreur de validation du webhook Stripe:', err.message);
+        return new Response(JSON.stringify({ error: 'Erreur de validation du webhook Stripe : ' + err.message }), { status: 400 });
     }
 
-    console.log('Received webhook:', event);
+    console.log('Webhook Stripe reçu:', event);
 
     try {
         switch (event.type) {
             case 'invoice.payment_succeeded': {
                 const invoice = event.data.object;
-                console.log('Payment succeeded:', invoice);
-                return new Response(JSON.stringify({ message: 'Invoice payment succeeded' }), { status: 200 });
+                console.log('Paiement réussi pour l\'invoice:', invoice);
+                return new Response(JSON.stringify({ message: 'Paiement de l\'invoice réussi' }), { status: 200 });
             }
 
             case 'checkout.session.completed': {
@@ -64,10 +64,9 @@ export async function POST({ request }) {
                     subscription_id: subscriptionId,
                     requests_limit: requestsLimit
                 };
-                console.log("userData", userData);
+                console.log("Données de l'utilisateur à créer:", userData);
 
-                console.log("Appel à la fonction createUser...");
-                
+                // Vérification si l'utilisateur existe déjà
                 const existingUserResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users?filter[email][_eq]=${userData.email}`);
                 const existingUserData = await existingUserResponse.json();
 
@@ -77,27 +76,28 @@ export async function POST({ request }) {
                 }
 
                 const newUser = await createUser(userData);
-                console.log(`Utilisateur créé avec succès : ${newUser?.id}`);
+                console.log("Réponse de la création d'utilisateur:", newUser);
 
                 if (newUser && newUser.id) {
                     await updateUser(newUser.id, { requests_made: 0 });
-                    console.log('Initialisation de requests_made à 0 pour le nouvel utilisateur.');
+                    console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${newUser.id}`);
 
-                    console.log(`Tentative d'envoi d'un e-mail de réinitialisation à : ${userData.email}`);
+                    console.log(`Envoi de l'email de réinitialisation à : ${userData.email}`);
                     const result = await passwordReset(userData.email);
-                    console.log(`Réponse de l'API Directus pour l'email de réinitialisation :`, result);
-                    console.log(`Email de réinitialisation envoyé à : ${userData.email}`);
+                    console.log("Réponse du resetPassword de Directus:", result);
+                } else {
+                    console.error("Échec de la création de l'utilisateur: aucune ID utilisateur renvoyée.");
                 }
 
                 return new Response(JSON.stringify({ message: "Utilisateur créé et email envoyé" }), { status: 200 });
             }
 
             default:
-                console.log(`Webhook non géré: ${event.type}`);
-                return new Response(JSON.stringify({ message: `Unhandled event type: ${event.type}` }), { status: 200 });
+                console.log(`Type d'événement non géré : ${event.type}`);
+                return new Response(JSON.stringify({ message: `Type d'événement non géré : ${event.type}` }), { status: 200 });
         }
     } catch (error) {
-        console.error("Erreur lors du traitement du webhook :", error);
+        console.error("Erreur lors du traitement du webhook:", error);
         return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
 }
