@@ -66,27 +66,21 @@ export async function POST({ request }) {
                 };
                 console.log("Données de l'utilisateur à créer:", userData);
 
-                // Vérification si l'utilisateur existe déjà
-                const existingUserResponse = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users?filter[email][_eq]=${userData.email}`);
-                const existingUserData = await existingUserResponse.json();
-
-                if (existingUserData && existingUserData.data && existingUserData.data.length > 0) {
-                    console.log("Utilisateur déjà existant avec cet email.");
-                    return new Response(JSON.stringify({ message: "Utilisateur déjà existant" }), { status: 200 });
-                }
-
+                // Création de l'utilisateur
                 const newUser = await createUser(userData);
                 console.log("Réponse de la création d'utilisateur:", newUser);
 
-                if (newUser && newUser.id) {
-                    await updateUser(newUser.id, { requests_made: 0 });
-                    console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${newUser.id}`);
+                if (newUser?.data?.id) {
+                    // Si l'ID est présent, continuer avec la configuration de l'utilisateur
+                    const userId = newUser.data.id;
+                    await updateUser(userId, { requests_made: 0 });
+                    console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
 
                     console.log(`Envoi de l'email de réinitialisation à : ${userData.email}`);
                     const result = await passwordReset(userData.email);
                     console.log("Réponse du resetPassword de Directus:", result);
                 } else {
-                    console.error("Échec de la création de l'utilisateur: aucune ID utilisateur renvoyée.");
+                    console.error("Échec de la création de l'utilisateur: ID utilisateur non reçu.");
                 }
 
                 return new Response(JSON.stringify({ message: "Utilisateur créé et email envoyé" }), { status: 200 });
