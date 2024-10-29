@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { createUser, updateUser } from "$lib/api"; // Retiré passwordReset car plus nécessaire
+import { createUser, updateUser } from "$lib/api";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const freePriceId = process.env.PRICE_FREE;
@@ -71,14 +71,10 @@ export async function POST({ request }) {
                 console.log("Réponse de la création d'utilisateur:", newUser);
 
                 if (newUser?.data?.id) {
-                    // Si l'ID est présent, initialiser `requests_made` à 0 pour l'utilisateur
                     const userId = newUser.data.id;
                     await updateUser(userId, { requests_made: 0 });
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
-
-                    // Envoi du mot de passe généré (ou affichage pour test)
                     console.log(`Mot de passe pour ${userData.email} : ${newUser.data.password}`);
-                    // Logique d'envoi d'email à implémenter ici pour informer l'utilisateur de son mot de passe
                 } else {
                     console.error("Échec de la création de l'utilisateur: ID utilisateur non reçu.");
                 }
