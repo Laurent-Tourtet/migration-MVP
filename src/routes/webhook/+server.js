@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { createUser, passwordReset, updateUser } from "$lib/api";
+import { createUser, updateUser } from "$lib/api"; // Retiré passwordReset car plus nécessaire
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const freePriceId = process.env.PRICE_FREE;
@@ -66,24 +66,24 @@ export async function POST({ request }) {
                 };
                 console.log("Données de l'utilisateur à créer:", userData);
 
-                // Création de l'utilisateur
+                // Création de l'utilisateur avec un mot de passe généré
                 const newUser = await createUser(userData);
                 console.log("Réponse de la création d'utilisateur:", newUser);
 
                 if (newUser?.data?.id) {
-                    // Si l'ID est présent, continuer avec la configuration de l'utilisateur
+                    // Si l'ID est présent, initialiser `requests_made` à 0 pour l'utilisateur
                     const userId = newUser.data.id;
                     await updateUser(userId, { requests_made: 0 });
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
 
-                    console.log(`Envoi de l'email de réinitialisation à : ${userData.email}`);
-                    const result = await passwordReset(userData.email);
-                    console.log("Réponse du resetPassword de Directus:", result);
+                    // Envoi du mot de passe généré (ou affichage pour test)
+                    console.log(`Mot de passe pour ${userData.email} : ${newUser.data.password}`);
+                    // Logique d'envoi d'email à implémenter ici pour informer l'utilisateur de son mot de passe
                 } else {
                     console.error("Échec de la création de l'utilisateur: ID utilisateur non reçu.");
                 }
 
-                return new Response(JSON.stringify({ message: "Utilisateur créé et email envoyé" }), { status: 200 });
+                return new Response(JSON.stringify({ message: "Utilisateur créé avec mot de passe généré" }), { status: 200 });
             }
 
             default:
