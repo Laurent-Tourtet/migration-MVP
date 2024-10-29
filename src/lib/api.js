@@ -230,12 +230,13 @@ export async function resetPasswordWithToken(token, password) {
 
 // Fonction pour mettre à jour un utilisateur dans Directus via `users/me`
 export async function updateUser(userId, updates) {
+    const token = getStoredToken();
     try {
         const response = await fetch(`https://directus.sqlconverter.fr/users/${userId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.DIRECTUS_TOKEN}`
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify(updates) // Assurez-vous que 'updates' est bien un objet JSON valide
         });
