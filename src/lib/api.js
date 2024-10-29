@@ -169,3 +169,24 @@ export async function updateUser(userId, updates) {
         throw error;
     }
 }
+
+export async function checkRequestLimit(token) {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/request/limit`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de la vérification de la limite de requêtes.');
+        }
+
+        return await response.json(); 
+    } catch (error) {
+        console.error('Erreur lors de la vérification de la limite de requêtes:', error);
+        throw error;
+    }
+}
