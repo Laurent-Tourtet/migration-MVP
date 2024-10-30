@@ -89,6 +89,27 @@ export async function login(email, password) {
     return data;
 }
 
+// Fonction pour récupérer les informations de profil d'un utilisateur
+export async function fetchProfile() {
+    const token = getStoredToken();
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const profileData = await response.json();
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la récupération du profil : ${JSON.stringify(profileData)}`);
+        }
+        return profileData;
+    } catch (error) {
+        console.error("Erreur dans fetchProfile:", error);
+        throw error;
+    }
+}
+
 // Fonction pour mettre à jour un utilisateur
 export async function updateUser(userId, updates) {
     const token = getStoredToken();
