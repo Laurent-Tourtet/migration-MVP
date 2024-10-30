@@ -112,6 +112,26 @@ export async function updateUser(userId, updates) {
         throw error;
     }
 }
+export async function resetPasswordWithToken(token, password) {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/auth/password-reset`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ password })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la réinitialisation du mot de passe : ${JSON.stringify(data)}`);
+        }
+    } catch (error) {
+        console.error("Erreur dans resetPasswordWithToken:", error);
+        throw error;
+    }
+}
 
 export async function checkRequestLimit(token) {
     try {
