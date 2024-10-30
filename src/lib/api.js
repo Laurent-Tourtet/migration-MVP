@@ -112,3 +112,22 @@ export async function updateUser(userId, updates) {
         throw error;
     }
 }
+
+export async function checkRequestLimit(token) {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la vérification de la limite de requête : ${JSON.stringify(data)}`);
+        }
+    } catch (error) {
+        console.error("Erreur dans checkRequestLimit:", error);
+        throw error;
+    }
+}
