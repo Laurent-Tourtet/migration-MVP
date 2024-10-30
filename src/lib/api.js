@@ -89,27 +89,6 @@ export async function login(email, password) {
     return data;
 }
 
-// Fonction pour récupérer les informations de profil d'un utilisateur
-export async function fetchProfile() {
-    const token = getStoredToken();
-    try {
-        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-
-        const profileData = await response.json();
-        if (!response.ok) {
-            throw new Error(`Erreur lors de la récupération du profil : ${JSON.stringify(profileData)}`);
-        }
-        return profileData;
-    } catch (error) {
-        console.error("Erreur dans fetchProfile:", error);
-        throw error;
-    }
-}
-
 // Fonction pour mettre à jour un utilisateur
 export async function updateUser(userId, updates) {
     const token = getStoredToken();
@@ -133,6 +112,8 @@ export async function updateUser(userId, updates) {
         throw error;
     }
 }
+
+// Fonction de réinitialisation de mot de passe avec un token
 export async function resetPasswordWithToken(token, password) {
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/auth/password-reset`, {
@@ -154,13 +135,13 @@ export async function resetPasswordWithToken(token, password) {
     }
 }
 
+// Fonction pour vérifier la limite de requêtes de l'utilisateur
 export async function checkRequestLimit(token) {
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-
         });
 
         const data = await response.json();
@@ -169,6 +150,49 @@ export async function checkRequestLimit(token) {
         }
     } catch (error) {
         console.error("Erreur dans checkRequestLimit:", error);
+        throw error;
+    }
+}
+
+// Fonction pour récupérer les informations de profil d'un utilisateur
+export async function fetchProfile() {
+    const token = getStoredToken();
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const profileData = await response.json();
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la récupération du profil : ${JSON.stringify(profileData)}`);
+        }
+        return profileData;
+    } catch (error) {
+        console.error("Erreur dans fetchProfile:", error);
+        throw error;
+    }
+}
+
+// Fonction pour demander la réinitialisation du mot de passe (envoie un email)
+export async function passwordReset(email) {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/auth/password/request`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erreur lors de la demande de réinitialisation de mot de passe : ${errorText}`);
+        }
+
+        console.log(`Email de réinitialisation envoyé à : ${email}`);
+        return true;
+    } catch (error) {
+        console.error("Erreur dans passwordReset:", error);
         throw error;
     }
 }
