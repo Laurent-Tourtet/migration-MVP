@@ -137,6 +137,10 @@ export async function resetPasswordWithToken(token, password) {
         if (!response.ok) {
             throw new Error(`Erreur lors de la réinitialisation du mot de passe : ${JSON.stringify(data)}`);
         }
+
+        console.log('Mot de passe réinitialisé avec succès:', data); // Ajoutez un log pour vérifier la réponse
+        return data; // Retournez la réponse si nécessaire, cela peut être utile pour le débogage
+        
     } catch (error) {
         console.error("Erreur dans resetPasswordWithToken:", error);
         throw error;
