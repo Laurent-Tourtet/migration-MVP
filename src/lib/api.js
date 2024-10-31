@@ -92,6 +92,12 @@ export async function login(email, password) {
 // Fonction pour mettre à jour un utilisateur
 export async function updateUser(userId, updates) {
     const token = getStoredToken();
+
+     // Ajout d'une vérification explicite pour s'assurer que le token est présent
+     if (!token) {
+        console.error("Token manquant pour l'opération de mise à jour.");
+        throw new Error("Erreur: Le token d'authentification est manquant.");
+    }
     
     try {
         const response = await fetch(`https://directus.sqlconverter.fr/users/${userId}`, {
