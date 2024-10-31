@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { createUser, updateUser } from "$lib/api";
+import { createUser, updateUser, passwordReset } from "$lib/api";
 
 // Initialisation de Stripe avec votre clé secrète
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -77,12 +77,15 @@ export async function POST({ request }) {
                     const updateResponse = await updateUser(userId, { requests_made: 0, requests_limit: requestsLimit }, token);
                     console.log("Réponse de la mise à jour de l'utilisateur:", updateResponse);
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
-                    console.log(`Mot de passe pour ${userData.email} : ${newUser.data.password}`);
+
+                    // Appel à la fonction passwordReset pour envoyer l'email de réinitialisation de mot de passe
+                    await passwordReset(email);
+                    console.log(`Email de réinitialisation envoyé à : ${email}`);
                 } else {
                     console.error("Échec de la création de l'utilisateur: ID utilisateur non reçu.");
                 }
 
-                return new Response(JSON.stringify({ message: "Utilisateur créé avec mot de passe généré" }), { status: 200 });
+                return new Response(JSON.stringify({ message: "Utilisateur créé avec mot de passe généré et email de réinitialisation envoyé" }), { status: 200 });
             }
 
             default:
