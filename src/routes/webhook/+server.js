@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createUser, updateUser } from "$lib/api";
+import { getStoredToken } from '../../lib/api';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const freePriceId = process.env.PRICE_FREE;
@@ -7,6 +8,7 @@ const standardPriceId = process.env.PRICE_STANDARD;
 const unlimitedPriceId = process.env.PRICE_UNLIMITED;
 
 export async function POST({ request }) {
+    const token = getStoredToken();
     console.log("Webhook POST reçu");
 
     const sig = request.headers.get('stripe-signature');
@@ -75,7 +77,7 @@ export async function POST({ request }) {
                     console.log(`ID de l'utilisateur créé: ${userId}`);
                     
                     // Mise à jour de l'utilisateur sans redéfinir `updateUser`
-                    const updateResponse = await updateUser(userId, { requests_made: 0, requests_limit: requestsLimit });
+                    const updateResponse = await updateUser(userId, { requests_made: 0, requests_limit: requestsLimit }, token);
                     console.log("Réponse de la mise à jour de l'utilisateur:", updateResponse);
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
                     console.log(`Mot de passe pour ${userData.email} : ${newUser.data.password}`);

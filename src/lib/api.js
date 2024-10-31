@@ -90,8 +90,8 @@ export async function login(email, password) {
 }
 
 // Fonction pour mettre à jour un utilisateur
-export async function updateUser(userId, updates) {
-    const token = getStoredToken();
+export async function updateUser(userId, updates, token) {
+    
 
      // Ajout d'une vérification explicite pour s'assurer que le token est présent
      if (!token) {
