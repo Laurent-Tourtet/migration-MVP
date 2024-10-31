@@ -124,8 +124,8 @@ export async function updateUser(userId, updates, token) {
 // Fonction de modification de mot de passe avec le token d'accès
 export async function resetPasswordWithToken(token, password) {
     try {
-        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
-            method: 'PATCH',
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/password/reset`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
