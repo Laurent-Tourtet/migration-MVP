@@ -92,8 +92,10 @@ export async function login(email, password) {
 // Fonction pour mettre à jour un utilisateur
 export async function updateUser(userId, updates) {
     const token = getStoredToken();
+    
     try {
         const response = await fetch(`https://directus.sqlconverter.fr/users/${userId}`, {
+            
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

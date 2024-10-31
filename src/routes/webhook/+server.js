@@ -72,7 +72,9 @@ export async function POST({ request }) {
 
                 if (newUser?.data?.id) {
                     const userId = newUser.data.id;
-                    await updateUser(userId, { requests_made: 0 });
+                    console.log(`ID de l'utilisateur créé: ${userId}`);
+                    const updateUser = await updateUser(userId, { requests_made: 0, requests_limit: requestsLimit });
+                    console.log("Réponse de la mise à jour de l'utilisateur:", updateUser);
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
                     console.log(`Mot de passe pour ${userData.email} : ${newUser.data.password}`);
                 } else {
