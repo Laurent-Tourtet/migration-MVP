@@ -130,7 +130,7 @@ export async function resetPasswordWithToken(token, password) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ token, password })
         });
 
         const data = await response.json();
