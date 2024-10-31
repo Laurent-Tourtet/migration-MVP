@@ -1,14 +1,17 @@
 import Stripe from 'stripe';
 import { createUser, updateUser } from "$lib/api";
-import { getStoredToken } from '../../lib/api';
 
+// Initialisation de Stripe avec votre clé secrète
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// Définition des prix par ID
 const freePriceId = process.env.PRICE_FREE;
 const standardPriceId = process.env.PRICE_STANDARD;
 const unlimitedPriceId = process.env.PRICE_UNLIMITED;
 
 export async function POST({ request }) {
-    const token = getStoredToken();
+    const token = process.env.DIRECTUS_ADMIN_TOKEN; // Utilisation de la variable d'environnement
+
     console.log("Webhook POST reçu");
 
     const sig = request.headers.get('stripe-signature');
@@ -26,12 +29,6 @@ export async function POST({ request }) {
 
     try {
         switch (event.type) {
-            case 'invoice.payment_succeeded': {
-                const invoice = event.data.object;
-                console.log('Paiement réussi pour l\'invoice:', invoice);
-                return new Response(JSON.stringify({ message: 'Paiement de l\'invoice réussi' }), { status: 200 });
-            }
-
             case 'checkout.session.completed': {
                 const session = event.data.object;
                 const email = session.customer_details.email;
@@ -75,8 +72,8 @@ export async function POST({ request }) {
                 if (newUser?.data?.id) {
                     const userId = newUser.data.id;
                     console.log(`ID de l'utilisateur créé: ${userId}`);
-                    
-                    // Mise à jour de l'utilisateur sans redéfinir `updateUser`
+
+                    // Mise à jour de l'utilisateur avec le token admin
                     const updateResponse = await updateUser(userId, { requests_made: 0, requests_limit: requestsLimit }, token);
                     console.log("Réponse de la mise à jour de l'utilisateur:", updateResponse);
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);

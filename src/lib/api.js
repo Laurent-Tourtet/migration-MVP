@@ -100,7 +100,7 @@ export async function updateUser(userId, updates, token) {
     }
     
     try {
-        const response = await fetch(`https://directus.sqlconverter.fr/users/${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${userId}`, {
             
             method: 'PATCH',
             headers: {
