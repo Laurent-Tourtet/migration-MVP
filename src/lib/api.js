@@ -128,7 +128,7 @@ export async function resetPasswordWithToken(token, password) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                
             },
             body: JSON.stringify({ token, password })
         });
