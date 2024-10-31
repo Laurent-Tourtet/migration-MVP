@@ -121,28 +121,32 @@ export async function updateUser(userId, updates, token) {
     }
 }
 
-// Fonction de modification de mot de passe avec le token d'accès
+// Fonction de réinitialisation de mot de passe avec un token
 export async function resetPasswordWithToken(token, password) {
     try {
-        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/password/reset`, {
+        const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/auth/password/reset`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({
+                token: token,
+                password: password
+            })
         });
 
         const data = await response.json();
         if (!response.ok) {
             throw new Error(`Erreur lors de la réinitialisation du mot de passe : ${JSON.stringify(data)}`);
         }
-        return data;
+
+        return data; // retournez les données si nécessaire
     } catch (error) {
         console.error("Erreur dans resetPasswordWithToken:", error);
         throw error;
     }
 }
+
 
 
 // Fonction pour vérifier la limite de requêtes de l'utilisateur
