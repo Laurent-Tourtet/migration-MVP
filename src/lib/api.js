@@ -135,6 +135,12 @@ export async function resetPasswordWithToken(token, password) {
             })
         });
 
+         // Vérifie si la réponse est vide avant de la traiter
+         const textResponse = await response.text();
+         if (!textResponse) {
+             throw new Error("La réponse du serveur est vide.");
+         }
+
         const data = await response.json();
         if (!response.ok) {
             throw new Error(`Erreur lors de la réinitialisation du mot de passe : ${JSON.stringify(data)}`);
