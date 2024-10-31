@@ -11,8 +11,14 @@
   let message = '';
 
   // Extraction du token de l'URL
-  $: token = $page.url.searchParams.get('token');
-  console.log('Token from URL:', token);
+  // $: token = $page.url.searchParams.get('token');
+  // console.log('Token from URL:', token);
+  // Extraction du token de l'URL lors du montage du composant
+  onMount(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    token = searchParams.get('token');
+    console.log('Token from URL:', token);
+  });
 
   function validatePassword(password) {
     const minLength = 8;
@@ -42,10 +48,11 @@
     try {
       await resetPasswordWithToken(token, newPassword);
       message = 'Votre mot de passe a été réinitialisé avec succès.';
+      goto('/login');  // Redirection après succès
     } catch (error) {
       message = `Erreur: ${error.message}`;
     }
-    goto('/login');
+    
   }
 </script>
 <Header />
