@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  
+  import { onMount } from 'svelte';
   import { resetPasswordWithToken } from '$lib/api';
   import  Header from '$lib/components/Header.svelte';
   import { goto } from '$app/navigation';
