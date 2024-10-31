@@ -130,7 +130,7 @@ export async function resetPasswordWithToken(token, password) {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ password })
+            body: JSON.stringify({ token, password })
         });
 
         const data = await response.json();
@@ -140,7 +140,7 @@ export async function resetPasswordWithToken(token, password) {
 
         console.log('Mot de passe réinitialisé avec succès:', data); // Ajoutez un log pour vérifier la réponse
         return data; // Retournez la réponse si nécessaire, cela peut être utile pour le débogage
-        
+
     } catch (error) {
         console.error("Erreur dans resetPasswordWithToken:", error);
         throw error;
