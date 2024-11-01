@@ -22,14 +22,14 @@
   //   console.log('Token from URL:', token);
   // });
 
-  function validatePassword(password) {
+  function validatePassword(newPassword) {
     const minLength = 8;
     const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/; // Vous pouvez ajouter d'autres caractères spéciaux si nécessaire
 
     if (password.length < minLength) {
       return 'Le mot de passe doit contenir au moins 8 caractères.';
     }
-    if (!specialCharPattern.test(password)) {
+    if (!specialCharPattern.test(newPassword)) {
       return 'Le mot de passe doit contenir au moins un caractère spécial.';
     }
     return null; // Pas d'erreur
