@@ -13,8 +13,6 @@
   // Extraction du token de l'URL
   // $: token = $page.url.searchParams.get('token');
   // console.log('Token from URL:', token);
-
-
   // Extraction du token de l'URL lors du montage du composant
   onMount(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -22,14 +20,14 @@
     console.log('Token from URL:', token);
   });
 
-  function validatePassword(newPassword) {
+  function validatePassword(password) {
     const minLength = 8;
     const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/; // Vous pouvez ajouter d'autres caractères spéciaux si nécessaire
 
     if (password.length < minLength) {
       return 'Le mot de passe doit contenir au moins 8 caractères.';
     }
-    if (!specialCharPattern.test(newPassword)) {
+    if (!specialCharPattern.test(password)) {
       return 'Le mot de passe doit contenir au moins un caractère spécial.';
     }
     return null; // Pas d'erreur
