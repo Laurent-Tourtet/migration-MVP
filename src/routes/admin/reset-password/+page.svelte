@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import { onMount } from 'svelte';
+  // import { onMount } from 'svelte';
   import { resetPasswordWithToken } from '$lib/api';
   import  Header from '$lib/components/Header.svelte';
   import { goto } from '$app/navigation';
@@ -11,14 +11,16 @@
   let message = '';
 
   // Extraction du token de l'URL
-  // $: token = $page.url.searchParams.get('token');
-  // console.log('Token from URL:', token);
+  $: token = $page.url.searchParams.get('token');
+  console.log('Token from URL:', token);
+
+
   // Extraction du token de l'URL lors du montage du composant
-  onMount(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    token = searchParams.get('token');
-    console.log('Token from URL:', token);
-  });
+  // onMount(() => {
+  //   const searchParams = new URLSearchParams(window.location.search);
+  //   token = searchParams.get('token');
+  //   console.log('Token from URL:', token);
+  // });
 
   function validatePassword(password) {
     const minLength = 8;
