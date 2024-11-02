@@ -14,10 +14,15 @@
   // $: token = $page.url.searchParams.get('token');
   // console.log('Token from URL:', token);
   // Extraction du token de l'URL lors du montage du composant
+
+
   onMount(() => {
     const searchParams = new URLSearchParams(window.location.search);
     token = searchParams.get('token');
     console.log('Token from URL:', token);
+    if (!token) {
+    console.error('Le token est introuvable dans l\'URL');
+  }
   });
 
   function validatePassword(password) {
