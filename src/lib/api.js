@@ -170,6 +170,7 @@ export async function checkRequestLimit(token) {
         });
 
         const data = await response.json();
+        console.log('Données de l\'API OpenAI :', data); // Ajoutez ceci
 
         // Vérifiez si la propriété success existe
         if ('success' in data) {
