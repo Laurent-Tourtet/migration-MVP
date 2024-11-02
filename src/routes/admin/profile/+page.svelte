@@ -34,6 +34,9 @@
         <li>
             <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
         </li>
+        <li>
+            <p>Nombres de requêtes disponibles: {userInfos.request_made}</p>
+        </li>
     </ul>
 {:else}
     <p>Chargement des informations ou utilisateur non authentifié.</p>
