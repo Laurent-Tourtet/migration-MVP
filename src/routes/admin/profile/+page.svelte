@@ -1,30 +1,30 @@
 <script>
     import { user } from '$lib/stores'; // Importer le store user
     import { fetchProfile } from '$lib/api'; // Importer la fonction fetchProfile
-    import { onMount } from 'svelte';
+    // import { onMount } from 'svelte';
     import Header from '$lib/components/Header.svelte';
 
-    onMount(() => {
-        if (typeof window !== 'undefined') {
-            const storedUser = localStorage.getItem('user');
-            console.log('Utilisateur stocké dans localStorage:', JSON.parse(storedUser));
-        }
-    });
+    // onMount(() => {
+    //     if (typeof window !== 'undefined') {
+    //         const storedUser = localStorage.getItem('user');
+    //         console.log('Utilisateur stocké dans localStorage:', JSON.parse(storedUser));
+    //     }
+    // });
 
 </script>
 <Header />
 <main>
     <aside class="left-menu">
         <a href="/admin/profile">Profile</a>
-        {#if $user}
-        <p>Hello {$user.firstname},</p>
+        {#if user}
+        <p>Hello {user.firstname},</p>
     {/if}
     <ul>
         <li>
-            <p>Prénom: {$user.lastname}</p>
+            <p>Prénom: {user.lastname}</p>
         </li>
         <li>
-            <p>Email: {$user.email}</p>
+            <p>Email: {user.email}</p>
         </li>
         
     </ul>
