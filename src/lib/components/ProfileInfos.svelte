@@ -18,7 +18,7 @@
     <a href="/admin/profile">Profile</a>
     {#if userInfos}
 <p>Hello {userInfos.first_name},</p>
-<ul>
+<ul class="left-menu--list">
     <li>
         <p>Nom et Prénom:{userInfos.first_name}  {userInfos.last_name}</p> <!-- Vérifiez la bonne propriété -->
     </li>
@@ -69,5 +69,28 @@
         box-shadow: 0 0 10px #333;
     }
 
+    h1 {
+        color: #3acdde;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+
+    .left-menu--list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .left-menu--list li {
+        margin: 10px 0;
+    }
+
+    .left-menu--list p {
+        color: #f8f5f5;
+    }
+
+    .left-menu--list p:first-child {
+        font-size: 1.5rem;
+    }   
+    
 
 </style>
