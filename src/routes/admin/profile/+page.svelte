@@ -15,8 +15,9 @@
     async function loadProfile() {
         const data = await fetchProfile(); // Appeler la fonction fetchProfile
         userInfos = data; // Affecter les données reçues à userInfos
+        console.log(userInfos);
     }
-console.log(userInfos);
+
     loadProfile();
 
 </script>
