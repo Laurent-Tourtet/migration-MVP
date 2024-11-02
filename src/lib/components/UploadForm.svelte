@@ -79,7 +79,7 @@ if (!response.ok) {
 </script>
 
 <form on:submit|preventDefault={uploadFile}>
-  <label for="file">Choisissez un fichier SQL :</label>
+  <label for="file">Téléchargez un fichier SQL :</label>
   <input id="file" type="file" on:change={handleFileChange} accept=".sql" />
   {#if loading}
   <p>Chargement en cours...</p>
@@ -134,6 +134,7 @@ if (!response.ok) {
       font-size: 1rem;
       color: #333;
   }
+ 
 
   .submit-button {
       width: 300px;
