@@ -34,6 +34,7 @@
         border-radius: 5px;
         background-color: #f4f4f4;
         box-shadow: 0 0 10px #333;
+        text-align: center;
     }
     h1 {
         color: #3acdde;
