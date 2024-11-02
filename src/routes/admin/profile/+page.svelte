@@ -1,30 +1,18 @@
 <script>
-    import { user } from '$lib/stores'; // Importer le store user
-    import { fetchProfile } from '$lib/api'; // Importer la fonction fetchProfile
-    // import { onMount } from 'svelte';
+    
+    
     import Header from '$lib/components/Header.svelte';
     import ProfileInfos from '$lib/components/ProfileInfos.svelte';
 
-    // onMount(() => {
-    //     if (typeof window !== 'undefined') {
-    //         const storedUser = localStorage.getItem('user');
-    //         console.log('Utilisateur stocké dans localStorage:', JSON.parse(storedUser));
-    //     }
-    // });
-    const { subscribe } = user; // Souscrire au store user
-    let userInfos; // Déclarer la variable userInfos
-    async function loadProfile() {
-        const data = await fetchProfile(); // Appeler la fonction fetchProfile
-        userInfos = data.data; // Affecter les données reçues à userInfos
-        console.log(userInfos);
-    }
+   
+   
 
     loadProfile();
 
 </script>
 <Header />
 <main>
-    <ProfileInfos {userInfos} />
+    <ProfileInfos />
 <section>
     <h1>Profile</h1>
     

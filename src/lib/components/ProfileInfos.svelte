@@ -1,3 +1,16 @@
+<script>
+    import { user } from '$lib/stores'; // Importer le store user
+    import { fetchProfile } from '$lib/api'; // Importer la fonction fetchProfile
+
+    const { subscribe } = user; // Souscrire au store user
+    let userInfos; // Déclarer la variable userInfos
+    async function loadProfile() {
+        const data = await fetchProfile(); // Appeler la fonction fetchProfile
+        userInfos = data.data; // Affecter les données reçues à userInfos
+        console.log(userInfos);
+    }
+</script>
+
 <aside class="left-menu">
     <a href="/admin/profile">Profile</a>
     {#if userInfos}
