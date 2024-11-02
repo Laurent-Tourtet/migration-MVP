@@ -26,7 +26,7 @@ console.log(userInfos);
         <a href="/admin/profile">Profile</a>
         {#if userInfos}
         <p>Hello {userInfos.firstname},</p>
-    {/if}
+    
     <ul>
         <li>
             <p>Prénom: {userInfos.lastname}</p>
@@ -36,6 +36,7 @@ console.log(userInfos);
         </li>
         
     </ul>
+    {/if}
         <a href="/new-password">Reset Password</a>
     </aside>
 <section>
