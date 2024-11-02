@@ -77,7 +77,7 @@
 
     .left-menu--list {
         list-style-type: none;
-        padding: 0;
+        padding: 20px;
     }
 
     .left-menu--list li {
@@ -91,6 +91,6 @@
     .left-menu--list p:first-child {
         font-size: 1.5rem;
     }   
-    
+
 
 </style>
