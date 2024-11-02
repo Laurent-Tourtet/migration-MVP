@@ -1,5 +1,8 @@
 <script>
     import { user } from '$lib/stores';
+    const storedUser = localStorage.getItem('user');
+console.log('Utilisateur stocké dans localStorage:', JSON.parse(storedUser));
+
     </script>
     
     <main>
