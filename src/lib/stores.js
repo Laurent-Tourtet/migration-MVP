@@ -31,6 +31,7 @@ export const authToken = writable(null);
 export const user = writable(null);
 
 export function setUser(data) {
+    console.log('Données utilisateur :', data);
     user.set({
         id: data.user_id,
         email: data.email,

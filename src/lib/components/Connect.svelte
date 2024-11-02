@@ -4,7 +4,7 @@
     
     <main>
         
-        {#if $user}
+        {#if $user & $user.firstname}
             <p class="paragraph"><strong>Hello {$user.firstname},<br>
                  télécharge un fichier postgres avec une extension .sql 
                  et clique sur convertir pour obtenir ta requête postgres convertie en MySQL</strong> </p>
