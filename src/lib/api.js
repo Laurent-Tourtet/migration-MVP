@@ -170,20 +170,24 @@ export async function checkRequestLimit(token) {
         });
 
         const data = await response.json();
-        console.log('Données de l\'API OpenAI :', data); // Ajoutez ceci
+console.log('Données de l\'API OpenAI :', data); // Assurez-vous de visualiser la réponse
 
-        // Vérifiez si la propriété success existe
-        if ('success' in data) {
-            return {
-                success: data.success,
-                message: data.message || 'Vérification réussie.'
-            };
-        } else {
-            return {
-                success: false,
-                message: 'La propriété success est manquante.'
-            };
-        }
+if (data && data.data) {
+    // Vérifiez si 'data.data' a des propriétés spécifiques que vous attendez
+    // S'il y a une propriété que vous devez valider, vous pouvez le faire ici
+    return {
+        success: true,  // Indiquez que l'appel a réussi
+        message: 'Données récupérées avec succès.',
+        userData: data.data // ou tout autre traitement des données
+    };
+} else {
+    console.error('Réponse sans la propriété attendue:', data);
+    return {
+        success: false,
+        message: 'La réponse de l\'API n\'est pas au format attendu.'
+    };
+}
+
 
     } catch (error) {
         console.error('Erreur lors de la vérification de la limite :', error);
