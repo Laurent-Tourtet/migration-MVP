@@ -9,6 +9,8 @@
         userInfos = data.data; // Affecter les données reçues à userInfos
         console.log(userInfos);
     }
+
+    loadProfile();
 </script>
 
 <aside class="left-menu">

@@ -7,7 +7,7 @@
    
    
 
-    loadProfile();
+   
 
 </script>
 <Header />
