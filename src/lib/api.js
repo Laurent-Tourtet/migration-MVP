@@ -165,17 +165,31 @@ export async function checkRequestLimit(token) {
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
             headers: {
-                Authorization: `Bearer ${token}`
+                'Authorization': `Bearer ${token}`
             }
         });
 
         const data = await response.json();
-        if (!response.ok) {
-            throw new Error(`Erreur lors de la vérification de la limite de requête : ${JSON.stringify(data)}`);
+
+        // Vérifiez si la propriété success existe
+        if ('success' in data) {
+            return {
+                success: data.success,
+                message: data.message || 'Vérification réussie.'
+            };
+        } else {
+            return {
+                success: false,
+                message: 'La propriété success est manquante.'
+            };
         }
+
     } catch (error) {
-        console.error("Erreur dans checkRequestLimit:", error);
-        throw error;
+        console.error('Erreur lors de la vérification de la limite :', error);
+        return {
+            success: false,
+            message: error.message || 'Erreur lors de la vérification de la limite.'
+        };
     }
 }
 
