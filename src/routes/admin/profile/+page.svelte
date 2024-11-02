@@ -29,7 +29,7 @@
     <p>Hello {userInfos.data.first_name},</p>
     <ul>
         <li>
-            <p>Nom et Prénom:{userInfos.data.last_name}  {userInfos.firstname}</p> <!-- Vérifiez la bonne propriété -->
+            <p>Nom et Prénom:{userInfos.data.last_name}  {userInfos.data.firstname}</p> <!-- Vérifiez la bonne propriété -->
         </li>
         <li>
             <p>Email: {userInfos.data.email}</p> <!-- Vérifiez également ici -->
