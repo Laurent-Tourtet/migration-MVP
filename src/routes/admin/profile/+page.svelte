@@ -35,7 +35,7 @@
             <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
         </li>
         <li>
-            <p>Nombres de requêtes disponibles: {userInfos.request_made}</p>
+            <p>Nombres de requêtes disponibles: {userInfos.requests_made}</p>
         </li>
     </ul>
 {:else}
