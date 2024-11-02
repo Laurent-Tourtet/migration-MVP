@@ -1,15 +1,9 @@
 <script>
-    
-    
     import Header from '$lib/components/Header.svelte';
     import ProfileInfos from '$lib/components/ProfileInfos.svelte';
 
-   
-   
-
-   
-
 </script>
+
 <Header />
 <main>
     <ProfileInfos />

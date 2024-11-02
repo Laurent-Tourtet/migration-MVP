@@ -44,7 +44,7 @@
     }
 
     .left-menu {
-        width: 20%;
+        /* width: 20%; */
         border-radius: 5px;
         padding: 5px 0;
         background-color: #063b69;
@@ -62,12 +62,12 @@
     }
 
     section {
-        width: 70%;
+        /* width: 70%; */
         padding: 20px;
         border-radius: 5px;
         background-color: #f4f4f4;
         box-shadow: 0 0 10px #333;
     }
 
-    
+
 </style>
