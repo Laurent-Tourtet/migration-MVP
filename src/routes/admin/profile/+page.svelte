@@ -10,21 +10,29 @@
     //         console.log('Utilisateur stocké dans localStorage:', JSON.parse(storedUser));
     //     }
     // });
+    const { subscribe } = user; // Souscrire au store user
+    let userInfos; // Déclarer la variable userInfos
+    async function loadProfile() {
+        const data = await fetchProfile(); // Appeler la fonction fetchProfile
+        userInfos = data; // Affecter les données reçues à userInfos
+    }
+
+    loadProfile();
 
 </script>
 <Header />
 <main>
     <aside class="left-menu">
         <a href="/admin/profile">Profile</a>
-        {#if user}
-        <p>Hello {user.firstname},</p>
+        {#if userInfos}
+        <p>Hello {userInfos.firstname},</p>
     {/if}
     <ul>
         <li>
-            <p>Prénom: {user.lastname}</p>
+            <p>Prénom: {userInfos.lastname}</p>
         </li>
         <li>
-            <p>Email: {user.email}</p>
+            <p>Email: {userInfos.email}</p>
         </li>
         
     </ul>
