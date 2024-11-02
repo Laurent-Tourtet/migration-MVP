@@ -17,7 +17,7 @@
 <aside class="left-menu">
     <a href="/admin/profile">Profile</a>
     {#if userInfos}
-<p>Hello {userInfos.first_name},</p>
+<h1>Hello {userInfos.first_name},</h1>
 <ul class="left-menu--list">
     <li>
         <p>Nom et Prénom:{userInfos.first_name}  {userInfos.last_name}</p> <!-- Vérifiez la bonne propriété -->
