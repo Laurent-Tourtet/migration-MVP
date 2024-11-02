@@ -20,7 +20,10 @@
 <h1>Hello {userInfos.first_name},</h1>
 <ul class="left-menu--list">
     <li>
-        <p>Nom et Prénom:{userInfos.first_name}  {userInfos.last_name}</p> <!-- Vérifiez la bonne propriété -->
+        <p>Nom: {userInfos.first_name}</p> <!-- Vérifiez la bonne propriété -->
+    </li>
+    <li>
+        <p>Prénom: {userInfos.last_name}</p>
     </li>
     <li>
         <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
