@@ -61,7 +61,7 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
     <h2>Demo beta</h2>
     <h2>Connectez vous via les identifiants fourni en mode démo.</h2>
     <p><strong>10</strong> Requêtes gratuites</p><br>
-    <p>Essayez notre convertisseur gratuitement pour 10 requêtes.</p>
+    <p>Essayez notre convertisseur gratuitement pour 3 requêtes.</p>
     <p class="price">Gratuit</p> 
     
   <!-- </div>
