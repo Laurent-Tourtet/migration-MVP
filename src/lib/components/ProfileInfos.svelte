@@ -43,7 +43,7 @@
      main {
         display: flex;
         justify-content: space-between;
-        margin: 50px;
+        /* margin: 50px; */
     }
 
     .left-menu {
