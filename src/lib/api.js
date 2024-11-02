@@ -170,25 +170,44 @@ export async function checkRequestLimit(token) {
         });
 
         const data = await response.json();
-console.log('Données de l\'API OpenAI :', data); // Assurez-vous de visualiser la réponse
+        console.log('Données de l\'API Directus :', data); // Assurez-vous de visualiser la réponse
 
-if (data && data.data) {
-    // Vérifiez si 'data.data' a des propriétés spécifiques que vous attendez
-    // S'il y a une propriété que vous devez valider, vous pouvez le faire ici
-    return {
-        success: true,  // Indiquez que l'appel a réussi
-        message: 'Données récupérées avec succès.',
-        userData: data.data // ou tout autre traitement des données
-    };
-} else {
-    console.error('Réponse sans la propriété attendue:', data);
-    return {
-        success: false,
-        message: 'La réponse de l\'API n\'est pas au format attendu.'
-    };
-}
+        if (data && data.data) {
+            const user = data.data;
 
+            // Incrémentez requests_made
+            const updatedRequestsMade = (user.requests_made || 0) + 1;
 
+            // Mettez à jour l'utilisateur avec la nouvelle valeur de requests_made
+            await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/${user.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ requests_made: updatedRequestsMade })
+            });
+
+            // Vérifiez la limite
+            if (user.requests_limit > 0 && updatedRequestsMade > user.requests_limit) {
+                return {
+                    success: false,
+                    message: 'Limite de requêtes atteinte.'
+                };
+            }
+
+            return {
+                success: true,
+                message: 'Données récupérées avec succès.',
+                userData: user // ou tout autre traitement des données
+            };
+        } else {
+            console.error('Réponse sans la propriété attendue:', data);
+            return {
+                success: false,
+                message: 'La réponse de l\'API n\'est pas au format attendu.'
+            };
+        }
     } catch (error) {
         console.error('Erreur lors de la vérification de la limite :', error);
         return {
@@ -197,6 +216,7 @@ if (data && data.data) {
         };
     }
 }
+
 
 // Fonction pour récupérer les informations de profil d'un utilisateur
 export async function fetchProfile() {
