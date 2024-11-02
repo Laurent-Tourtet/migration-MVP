@@ -135,23 +135,28 @@ export async function resetPasswordWithToken(token, password) {
             })
         });
 
-         // Vérifie si la réponse est vide avant de la traiter
-         const textResponse = await response.text();
-         if (!textResponse) {
-             throw new Error("La réponse du serveur est vide.");
-         }
+        // Gérer les réponses avec un statut 204 sans lever d'erreur
+        if (response.status === 204) {
+            return { message: "Réinitialisation réussie." };
+        }
 
-        const data = await response.json();
+        const textResponse = await response.text();
+        if (!textResponse) {
+            throw new Error("La réponse du serveur est vide.");
+        }
+
+        const data = JSON.parse(textResponse);
         if (!response.ok) {
             throw new Error(`Erreur lors de la réinitialisation du mot de passe : ${JSON.stringify(data)}`);
         }
 
-        return data; // retournez les données si nécessaire
+        return data; // Retourner les données si nécessaire
     } catch (error) {
         console.error("Erreur dans resetPasswordWithToken:", error);
         throw error;
     }
 }
+
 
 
 
