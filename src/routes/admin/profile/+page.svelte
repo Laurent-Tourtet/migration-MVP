@@ -26,18 +26,18 @@
     <aside class="left-menu">
         <a href="/admin/profile">Profile</a>
         {#if userInfos}
-        <p>Hello {userInfos.firstname},</p>
-    
+    <p>Hello {userInfos.firstname},</p>
     <ul>
         <li>
-            <p>Prénom: {userInfos.lastname}</p>
+            <p>Prénom: {userInfos.firstname}</p> <!-- Vérifiez la bonne propriété -->
         </li>
         <li>
-            <p>Email: {userInfos.email}</p>
+            <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
         </li>
-        
     </ul>
-    {/if}
+{:else}
+    <p>Chargement des informations ou utilisateur non authentifié.</p>
+{/if}
         <a href="/new-password">Reset Password</a>
     </aside>
 <section>

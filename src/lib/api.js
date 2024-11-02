@@ -221,6 +221,14 @@ export async function checkRequestLimit(token) {
 // Fonction pour récupérer les informations de profil d'un utilisateur
 export async function fetchProfile() {
     const token = getStoredToken();
+    console.log("Token récupéré :", token);
+
+    if (!token) {
+        console.error("Aucun token trouvé, l'utilisateur peut ne pas être authentifié.");
+        return null; // Retourne null si le token n'est pas trouvé
+    }
+
+
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/users/me`, {
             headers: {
@@ -232,6 +240,7 @@ export async function fetchProfile() {
         if (!response.ok) {
             throw new Error(`Erreur lors de la récupération du profil : ${JSON.stringify(profileData)}`);
         }
+        console.log("Données du profil récupérées :", profileData); // Vérifiez la structure des données ici
         return profileData;
     } catch (error) {
         console.error("Erreur dans fetchProfile:", error);
