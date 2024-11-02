@@ -92,7 +92,7 @@
     }
 
     .left-menu--list p:first-child {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }   
 
 
