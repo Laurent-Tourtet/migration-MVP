@@ -112,7 +112,8 @@ export async function POST({ request }) {
         const token = authHeader.split(' ')[1];  // Extrait le token après "Bearer "
         console.log('Token reçu :', token);
 
-        const limitCheck = await checkRequestLimit(token); 
+        const limitCheck = await checkRequestLimit(token);
+        console.log('Résultat de limitCheck :', limitCheck); 
 
         if (!limitCheck.success) {
             // Si l'utilisateur a atteint sa limite, retourner une réponse appropriée
