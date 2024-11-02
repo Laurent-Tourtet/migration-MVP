@@ -19,7 +19,7 @@
     </aside>
 <section>
     <h1>Profile</h1>
-    {#if $user && $user.firstname}
+    {#if $user}
         <p>Hello {$user.firstname},</p>
     {/if}
     <ul>
@@ -29,9 +29,7 @@
         <li>
             <p>Email: {$user.email}</p>
         </li>
-        <li>
-            <p>Mot de passe: {$user.password}</p>
-        </li>
+        
     </ul>
     <p>Welcome to your profile page.</p>
     <p>Here you can update your personal information.</p>
