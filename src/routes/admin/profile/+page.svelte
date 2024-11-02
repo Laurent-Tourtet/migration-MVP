@@ -40,4 +40,9 @@
         padding-bottom: 10px;
         text-align: center;
     }
+    p {
+        color: #063b69;
+        font-size: 1.2rem;
+        padding: 10px;
+    }
 </style>
