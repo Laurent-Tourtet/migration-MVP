@@ -14,7 +14,7 @@
     let userInfos; // Déclarer la variable userInfos
     async function loadProfile() {
         const data = await fetchProfile(); // Appeler la fonction fetchProfile
-        userInfos = data; // Affecter les données reçues à userInfos
+        userInfos = data.data; // Affecter les données reçues à userInfos
         console.log(userInfos);
     }
 
@@ -26,13 +26,13 @@
     <aside class="left-menu">
         <a href="/admin/profile">Profile</a>
         {#if userInfos}
-    <p>Hello {userInfos.data.first_name},</p>
+    <p>Hello {userInfos.first_name},</p>
     <ul>
         <li>
-            <p>Nom et Prénom:{userInfos.data.last_name}  {userInfos.data.firstname}</p> <!-- Vérifiez la bonne propriété -->
+            <p>Nom et Prénom:{userInfos.last_name}  {userInfos.firstname}</p> <!-- Vérifiez la bonne propriété -->
         </li>
         <li>
-            <p>Email: {userInfos.data.email}</p> <!-- Vérifiez également ici -->
+            <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
         </li>
     </ul>
 {:else}
