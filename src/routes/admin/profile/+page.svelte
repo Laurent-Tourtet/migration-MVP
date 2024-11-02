@@ -26,10 +26,10 @@
     <aside class="left-menu">
         <a href="/admin/profile">Profile</a>
         {#if userInfos}
-    <p>Hello {userInfos.firstname},</p>
+    <p>Hello {userInfos.first_name},</p>
     <ul>
         <li>
-            <p>Prénom: {userInfos.firstname}</p> <!-- Vérifiez la bonne propriété -->
+            <p>Nom et Prénom:{userInfos.last_name}  {userInfos.firstname}</p> <!-- Vérifiez la bonne propriété -->
         </li>
         <li>
             <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
