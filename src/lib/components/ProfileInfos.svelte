@@ -12,7 +12,8 @@
 
     loadProfile();
 </script>
-
+<main>
+    <section>
 <aside class="left-menu">
     <a href="/admin/profile">Profile</a>
     {#if userInfos}
@@ -33,3 +34,40 @@
 {/if}
     <a href="/new-password">Reset Password</a>
 </aside>
+</section>
+</main>
+<style>
+     main {
+        display: flex;
+        justify-content: space-between;
+        margin: 50px;
+    }
+
+    .left-menu {
+        width: 20%;
+        border-radius: 5px;
+        padding: 5px 0;
+        background-color: #063b69;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px #333;
+    }
+
+    .left-menu a {
+        font-size: 1.2rem;
+        padding: 10px;
+        color: #3acdde;
+    }
+
+    section {
+        width: 70%;
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #f4f4f4;
+        box-shadow: 0 0 10px #333;
+    }
+
+    
+</style>
