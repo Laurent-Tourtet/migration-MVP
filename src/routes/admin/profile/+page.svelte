@@ -1,6 +1,14 @@
 <script>
     import { user } from '$lib/stores'; // Importer le store user
+    import { onMount } from 'svelte';
     import Header from '$lib/components/Header.svelte';
+
+    onMount(() => {
+        if (typeof window !== 'undefined') {
+            const storedUser = localStorage.getItem('user');
+            console.log('Utilisateur stocké dans localStorage:', JSON.parse(storedUser));
+        }
+    });
 
 </script>
 <Header />
@@ -11,18 +19,18 @@
     </aside>
 <section>
     <h1>Profile</h1>
+    {#if $user && $user.firstname}
+        <p>Hello {$user.firstname},</p>
+    {/if}
     <ul>
         <li>
-            <p>Nom: {$user.firstname}</p>
+            <p>Prénom: {$user.lastname}</p>
         </li>
         <li>
-            <p>Prénom: {user.lastname}</p>
+            <p>Email: {$user.email}</p>
         </li>
         <li>
-            <p>Email: {user.email}</p>
-        </li>
-        <li>
-            <p>Mot de passe: {user.password}</p>
+            <p>Mot de passe: {$user.password}</p>
         </li>
     </ul>
     <p>Welcome to your profile page.</p>
