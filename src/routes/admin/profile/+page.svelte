@@ -15,11 +15,7 @@
 <main>
     <aside class="left-menu">
         <a href="/admin/profile">Profile</a>
-        <a href="/new-password">Reset Password</a>
-    </aside>
-<section>
-    <h1>Profile</h1>
-    {#if $user}
+        {#if $user}
         <p>Hello {$user.firstname},</p>
     {/if}
     <ul>
@@ -31,6 +27,11 @@
         </li>
         
     </ul>
+        <a href="/new-password">Reset Password</a>
+    </aside>
+<section>
+    <h1>Profile</h1>
+    
     <p>Welcome to your profile page.</p>
     <p>Here you can update your personal information.</p>
     <p>For security reasons, you can't change your email address.</p>
