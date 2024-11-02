@@ -10,7 +10,7 @@
         <p>Email: {userInfos.email}</p> <!-- Vérifiez également ici -->
     </li>
     <li>
-        <p>Nombres de requêtes disponibles: {userInfos.requests_limit - userInfos.requests_made}</p>
+        <p>Il vous reste {userInfos.requests_limit - userInfos.requests_made} requêtes disponibles</p>
     </li>
 </ul>
 {:else}
