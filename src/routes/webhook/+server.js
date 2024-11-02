@@ -81,6 +81,10 @@ export async function POST({ request }) {
                     // Appel à la fonction passwordReset pour envoyer l'email de réinitialisation de mot de passe
                     await passwordReset(email);
                     console.log(`Email de réinitialisation envoyé à : ${email}`);
+
+                    // Incrémentez requests_made pour l'utilisateur
+                    await updateUser(userId, { requests_made: 1 }, token);
+                    console.log(`Incrémentation de requests_made pour l'utilisateur ID ${userId}`);
                 } else {
                     console.error("Échec de la création de l'utilisateur: ID utilisateur non reçu.");
                 }
