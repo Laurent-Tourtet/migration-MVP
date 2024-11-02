@@ -1,5 +1,6 @@
 <script>
     import { user } from '$lib/stores'; // Importer le store user
+    import { fetchProfile } from '$lib/api'; // Importer la fonction fetchProfile
     import { onMount } from 'svelte';
     import Header from '$lib/components/Header.svelte';
 
