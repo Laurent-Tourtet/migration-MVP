@@ -1,4 +1,5 @@
 <script>
+    import { user } from '$lib/stores'; // Importer le store user
     import Header from '$lib/components/Header.svelte';
 
 </script>
@@ -10,6 +11,20 @@
     </aside>
 <section>
     <h1>Profile</h1>
+    <ul>
+        <li>
+            <p>Nom: {$user.firstname}</p>
+        </li>
+        <li>
+            <p>Prénom: {user.lastname}</p>
+        </li>
+        <li>
+            <p>Email: {user.email}</p>
+        </li>
+        <li>
+            <p>Mot de passe: {user.password}</p>
+        </li>
+    </ul>
     <p>Welcome to your profile page.</p>
     <p>Here you can update your personal information.</p>
     <p>For security reasons, you can't change your email address.</p>
