@@ -60,7 +60,7 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
   <div class="pricing-card">
         <h2>Demo beta</h2>
     <h2>Demandez nous les identifiants pour une demo par mail</h2>
-    <button class="price-btn" on:click={() => window.location.href = 'mailto:votre.email@example.com?subject=Demande de demo beta'}>Je veux tester</button>
+    <button class="price-btn" on:click={() => window.location.href = 'mailto:contact@yautedev.fr?subject=Demande de demo beta'}>Je veux tester</button>
     <p class="price">Nous vous offrons <strong>3</strong> Requêtes gratuites</p><br>
     <!-- <p class="price">Essayez notre convertisseur gratuitement pour 3 requêtes.</p> -->
      
