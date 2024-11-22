@@ -58,11 +58,12 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
 <main class="pricing-container">
 <!-- mode démo  -->
   <div class="pricing-card">
-    <h2>Demo beta</h2>
-    <h2>Connectez vous via les identifiants fourni en mode démo.</h2>
-    <p><strong>3</strong> Requêtes gratuites</p><br>
-    <p>Essayez notre convertisseur gratuitement pour 3 requêtes.</p>
-    <p class="price">Gratuit</p> 
+        <h2>Demo beta</h2>
+    <h2>Demandez nous les identifiants pour une demo par mail</h2>
+    <button class="price-btn" on:click={() => window.location.href = 'mailto:votre.email@example.com?subject=Demande de demo beta'}>Je veux tester</button>
+    <p class="price">Nous vous offrons <strong>3</strong> Requêtes gratuites</p><br>
+    <p class="price">Essayez notre convertisseur gratuitement pour 3 requêtes.</p>
+     
     
   <!-- </div>
    <div class="pricing-card">
@@ -131,12 +132,22 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
 
   /* Prix */
   .price {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: #343a40;
-    margin: 20px 0;
+    color: #c4c9cf;
+    margin: 0;
   }
-
+  .price-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
   /* Bouton d'inscription */
   .subscribe-btn {
     background-color: #007bff;
