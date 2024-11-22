@@ -148,6 +148,9 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
     font-size: 1rem;
     transition: background-color 0.3s;
   }
+  .price-btn:hover {
+    background-color: #313d4a;
+  }
   /* Bouton d'inscription */
   .subscribe-btn {
     background-color: #007bff;
