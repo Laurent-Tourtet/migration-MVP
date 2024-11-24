@@ -67,8 +67,8 @@
         body: JSON.stringify({
           email: email,
           password: password,
-          role: 'role_id_demo', // ID du rôle pour les utilisateurs démo
-          status: 'active'
+          // role: 'role_id_demo', // ID du rôle pour les utilisateurs démo
+          // status: 'active'
         })
       });
 
