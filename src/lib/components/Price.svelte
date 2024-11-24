@@ -52,18 +52,42 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
     }
 }
 
+let email = ''; // Stocke l'email saisi par l'utilisateur
+
+  function sendDemoEmail() {
+    if (!email) {
+      alert('Veuillez entrer une adresse email valide.');
+      return;
+    }
+
+    const subject = encodeURIComponent('Demande de demo beta');
+    const body = encodeURIComponent(
+      `Bonjour, Veuillez me fournir les identifiants pour une démo beta. Mon email est : ${email}.
+
+     Merci.`
+    );
+    const mailtoLink = `mailto:contact@yautedev.fr?subject=${subject}&body=${body}`;
+
+    window.location.href = mailtoLink;
+  }
+
+
 </script>
 
 {#if !$user}
 <main class="pricing-container">
 <!-- mode démo  -->
   <div class="pricing-card">
-        <h2>Demo beta</h2>
-    <h2>Demandez nous les identifiants pour une demo par mail</h2>
-    <label for="">Entrez votre email: </label>
-    <input type="email" id="email"> -->
-    <button class="price-btn" on:click={() => window.location.href = 'mailto:contact@yautedev.fr?subject=Demande de demo beta&body=Bonjour,%0D%0A%0D%0AVeuillez me fournir les identifiants pour une démo beta.%0D%0AMerci.'}>Je veux tester</button>
+    <h2>Demo beta</h2>
     <p class="price">Nous vous offrons <strong>3</strong> Requêtes gratuites</p><br>
+    <h2>Demandez-nous les identifiants pour une demo</h2>
+    <p class="price">Nous vous enverrons vos identifiants</p>
+    <p class="price"> pour la demo sur votre boite mail</p><br />
+    <label for="email">Entrez votre email :</label>
+    <input type="email" id="email" bind:value={email} placeholder="Votre email" required />
+    <button class="price-btn" on:click={sendDemoEmail}>Je veux tester</button>
+   
+   
     <!-- <p class="price">Essayez notre convertisseur gratuitement pour 3 requêtes.</p> -->
      
     
@@ -134,7 +158,7 @@ const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
 
   /* Prix */
   .price {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #c4c9cf;
     margin: 0;
