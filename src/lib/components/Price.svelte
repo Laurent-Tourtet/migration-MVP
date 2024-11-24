@@ -4,129 +4,65 @@
   import { loadStripe } from '@stripe/stripe-js';
 
   let stripe;
-  let email = ''; // Stocke l'email saisi par l'utilisateur
-
   const freePriceId = import.meta.env.VITE_PRICE_FREE;
-  const standardPriceId = import.meta.env.VITE_PRICE_STANDARD;
-  const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
-
-  const directusUrl = import.meta.env.VITE_DIRECTUS_URL; // URL de Directus
-  const directusAdminToken = import.meta.env.VITE_DIRECTUS_ADMIN_TOKEN; // Token admin Directus
+const standardPriceId = import.meta.env.VITE_PRICE_STANDARD;
+const unlimitedPriceId = import.meta.env.VITE_PRICE_UNLIMITED;
 
   // Chargement de Stripe avec la clé publique
   (async () => {
     stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
   })();
 
+  function handleSignupClick() {
+    goto('/login');
+  }
+
   async function subscribe(planId) {
     try {
-      const response = await fetch('/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ planId })
-      });
+        const response = await fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ planId })
+        });
+         // Log de la réponse HTTP
+      console.log('Réponse:', response);
 
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status} ${response.statusText}`);
-      }
-
-      const { sessionId } = await response.json();
-
-      if (sessionId) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
-        if (error) {
-          console.error('Erreur lors de la redirection vers Stripe :', error);
+        // Vérifiez si la réponse est réussie
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status} ${response.statusText}`);
         }
-      } else {
-        console.error('Erreur lors de la création de la session Stripe');
-      }
+
+        const { sessionId } = await response.json();
+
+        if (sessionId) {
+          
+
+            // Redirection vers Stripe avec la méthode recommandée
+            const { error } = await stripe.redirectToCheckout({ sessionId });
+            if (error) {
+                console.error('Erreur lors de la redirection vers Stripe :', error);
+            }
+        } else {
+            console.error('Erreur lors de la création de la session Stripe');
+        }
     } catch (error) {
-      console.error('Erreur lors de la création de la session Stripe :', error);
+        console.error('Erreur lors de la création de la session Stripe :', error);
     }
-  }
+}
 
-  async function createDemoUser() {
-    if (!email) {
-      alert('Veuillez entrer une adresse email valide.');
-      return;
-    }
-
-    // Génération d'un mot de passe aléatoire
-    const password = generateRandomPassword();
-
-    try {
-      // Requête à l'API Directus pour créer un utilisateur
-      const response = await fetch(`${directusUrl}/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${directusAdminToken}` // Utilisez le token admin
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          // role: 'role_id_demo', // ID du rôle pour les utilisateurs démo
-          // status: 'active'
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        alert('Utilisateur démo créé avec succès. Vérifiez vos emails pour les identifiants.');
-
-        // Appelez un endpoint pour envoyer les identifiants par email
-        await sendDemoEmail(email, password);
-      } else {
-        console.error('Erreur lors de la création de l\'utilisateur Directus:', await response.text());
-        alert('Une erreur est survenue lors de la création de l\'utilisateur.');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la création de l\'utilisateur Directus:', error);
-    }
-  }
-
-  async function sendDemoEmail(email, password) {
-    try {
-      // Appel à un endpoint local pour envoyer l'email
-      const response = await fetch('/api/send-mail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (response.ok) {
-        console.log('Email envoyé avec succès.');
-      } else {
-        console.error('Erreur lors de l\'envoi de l\'email:', await response.text());
-      }
-    } catch (error) {
-      console.error('Erreur lors de l\'envoi de l\'email:', error);
-    }
-  }
-
-  function generateRandomPassword(length = 10) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-    let password = '';
-    for (let i = 0; i < length; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
-  }
 </script>
 
 {#if !$user}
 <main class="pricing-container">
 <!-- mode démo  -->
   <div class="pricing-card">
-    <h2>Demo beta</h2>
-    <h2>Demandez-nous les identifiants pour une demo</h2>
-    <label for="email">Entrez votre email :</label>
-    <input type="email" id="email" bind:value={email} placeholder="Votre email" required />
-    <button class="price-btn" on:click={createDemoUser}>Je veux tester</button>
+        <h2>Demo beta</h2>
+    <h2>Demandez nous les identifiants pour une demo par mail</h2>
+    <label for="">Entrez votre email: </label>
+    <input type="email" id="email"> -->
+    <button class="price-btn" on:click={() => window.location.href = 'mailto:contact@yautedev.fr?subject=Demande de demo beta&body=Bonjour,%0D%0A%0D%0AVeuillez me fournir les identifiants pour une démo beta.%0D%0AMerci.'}>Je veux tester</button>
     <p class="price">Nous vous offrons <strong>3</strong> Requêtes gratuites</p><br>
     <!-- <p class="price">Essayez notre convertisseur gratuitement pour 3 requêtes.</p> -->
      
