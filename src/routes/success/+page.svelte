@@ -7,9 +7,9 @@
     <p>Votre abonnement a été activé avec succès.</p>
     <p>Un email vous à été envoyé à l'adresse fournie lors du paiement afin de créer votre mot de passe,</p>
        <p><span>votre identifiant: votre adresse mail</span></p>
-       <p>
-        <a href="mailto:" id="access-mail">Accéder à vos mails</a>
-      </p>
+       
+        <p >Accéder à vos mails</p>
+      
   </main>
   <style>
     main {
