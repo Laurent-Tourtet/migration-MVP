@@ -249,12 +249,12 @@ export async function fetchProfile() {
 }
 
 // Fonction pour demander la réinitialisation du mot de passe (envoie un email)
-export async function passwordReset(email) {
+export async function passwordReset(email, templateKey = 'custom-template') {
     try {
         const response = await fetch(`${import.meta.env.VITE_DIRECTUS_URL}/auth/password/request`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email, template: templateKey })
         });
 
         if (!response.ok) {

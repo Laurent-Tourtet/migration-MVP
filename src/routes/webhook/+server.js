@@ -79,7 +79,7 @@ export async function POST({ request }) {
                     console.log(`Initialisation de requests_made à 0 pour l'utilisateur ID ${userId}`);
 
                     // Appel à la fonction passwordReset pour envoyer l'email de réinitialisation de mot de passe
-                    await passwordReset(email);
+                    await passwordReset(email, 'custom-template');
                     console.log(`Email de réinitialisation envoyé à : ${email}`);
 
                     // Incrémentez requests_made pour l'utilisateur
