@@ -29,6 +29,7 @@
 		"@stripe/stripe-js": "^4.6.0",
 		"@sveltejs/adapter-node": "^5.2.3",
 		"dotenv": "^16.4.5",
+		"liquidjs": "^10.19.0",
 		"node-fetch": "^3.3.2",
 		"nodemailer": "^6.9.16",
 		"openai": "^4.65.0",

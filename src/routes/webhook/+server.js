@@ -44,7 +44,7 @@ export async function POST({ request }) {
 
                 switch (planId) {
                     case freePriceId:
-                        requestsLimit = 10;
+                        requestsLimit = 3;
                         break;
                     case standardPriceId:
                         requestsLimit = 100;

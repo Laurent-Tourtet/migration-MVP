@@ -77,44 +77,41 @@ let email = ''; // Stocke l'email saisi par l'utilisateur
 {#if !$user}
 <main class="pricing-container">
 <!-- mode démo  -->
-  <div class="pricing-card">
+  <!-- <div class="pricing-card">
     <h2>Demo beta</h2>
     <p class="price">Nous vous offrons <strong>3</strong> Requêtes gratuites</p><br>
     <h2>Demandez-nous les identifiants pour une demo</h2>
     <p class="price">Nous vous enverrons vos identifiants</p>
     <p class="price"> pour la demo sur votre boite mail</p><br />
-    <label for="email">Entrez votre email :</label>
-    <input type="email" id="email" bind:value={email} placeholder="Votre email" required />
+   
     <button class="price-btn" on:click={sendDemoEmail}>Je veux tester</button>
-   
-   
-    <!-- <p class="price">Essayez notre convertisseur gratuitement pour 3 requêtes.</p> -->
-     
-    
-  <!-- </div>
+  </div> -->
+
    <div class="pricing-card">
     <h2>Demo</h2>
-    <p><strong>10</strong> Requêtes gratuites</p><br>
-    <p>Essayez notre convertisseur gratuitement pour 10 requêtes.</p>
-    <p class="price">Gratuit</p>
+    <p class="price"><strong>3</strong> Requêtes gratuites</p><br>
+    <p class="price">Essayez notre convertisseur gratuitement pour 3 requêtes.</p><br />
+    <!-- <label class="mail-label" for="email">Entrez votre email :</label>
+    <input class="mail-btn" type="email" id="email" bind:value={email} placeholder="Votre email" required /> -->
+    <p class="price">Gratuit</p><br />
     <button class="subscribe-btn" on:click={() => subscribe(freePriceId)}>Souscrire</button>
   </div> 
 
    <div class="pricing-card">
     <h2>Standard</h2>
-    <p><strong>100</strong> requêtes par mois</p><br>
-    <p>Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p>
-    <p class="price">19,99 €/mois</p>
+    <p class="price"><strong>100</strong> requêtes par mois</p><br>
+    <p class="price">Adapté aux petits développeurs ou aux équipes avec des besoins modérés.</p><br />
+    <p class="price">19,99 €/mois</p><br />
     <button class="subscribe-btn" on:click={() => subscribe(standardPriceId)}>Souscrire</button>
   </div>
 
   <div class="pricing-card">
     <h2>Unlimited</h2>
-    <p><strong>Requêtes illimitées</strong></p><br>
-    Pour les entreprises ou les développeurs ayant des besoins intensifs et réguliers
-    <p class="price">69,99 €/mois</p>
+    <p class="price"><strong>Requêtes illimitées</strong></p><br>
+    <p class="price">Pour les entreprises ou les développeurs ayant des besoins intensifs et réguliers</p><br />
+    <p class="price">69,99 €/mois</p><br />
     <button class="subscribe-btn" on:click={() => subscribe(unlimitedPriceId)}>Souscrire</button>
-  </div> -->
+  </div>
 </main>
 {/if}
 
@@ -124,23 +121,25 @@ let email = ''; // Stocke l'email saisi par l'utilisateur
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 50px auto;
+    /* margin: 50px auto; */
     padding: 20px;
-    max-width: 1200px;
+    /* max-width: 1200px; */
   }
 
   /* Style des cartes d'abonnement */
   .pricing-card {
+    display: flex;
+    flex-direction: column;
     background-color: #f8f9fa;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     padding: 20px;
-    /* width: 30%; */
-    width: 100%;
+    width: 30%;
+    /* width: 100%;  */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 
   .pricing-card:hover {
@@ -177,6 +176,20 @@ let email = ''; // Stocke l'email saisi par l'utilisateur
   .price-btn:hover {
     background-color: #313d4a;
     box-shadow: 2px 4px 8px rgba(253, 251, 251, 0.959);
+  }
+  .mail-label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #c4c9cf;
+    margin: 0;
+  }
+  .mail-btn {
+    padding: 10px 20px;
+    margin: 20px auto;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    font-size: 1rem;
+    width: 50%;
   }
   /* Bouton d'inscription */
   .subscribe-btn {
